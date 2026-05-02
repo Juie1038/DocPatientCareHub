@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DocPatientCareHub – Meet to Doctor: Patient Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f7fa;color:#1a1d26;font-size:14px}
+
+/* ── NAV ── */
+nav{background:#fff;border-bottom:1px solid #e8eaf0;padding:0 24px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:200;gap:32px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;background:#1a5cff;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:20px;height:20px;fill:#fff}
+.logo-text{font-size:1.2rem;font-weight:700;color:#1a1d26}
+.logo-text span{color:#1a5cff}
+.logo-sub{font-size:9px;color:#888;display:block;margin-top:-2px;font-weight:400}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:#444;padding:6px 12px;border-radius:6px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover{background:#f0f4ff;color:#1a5cff}
+.nav-links a.active{color:#1a5cff;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn{background:#1a5cff;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
+.nav-btn:hover{background:#1248d6}
+.nav-btn-outline{background:#fff;color:#1a5cff;border:1.5px solid #1a5cff;padding:7px 16px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn-outline:hover{background:#f0f4ff}
+.user-chip{display:flex;align-items:center;gap:8px;background:#f0f4ff;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer;transition:background .15s}
+.user-chip:hover{background:#dde8ff}
+.user-avatar{width:28px;height:28px;background:#1a5cff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.75rem}
+.user-chip span{font-size:0.82rem;font-weight:600;color:#1a1d26}
+
+/* ── SEARCH ── */
+.search-section{background:#fff;border-bottom:1px solid #e8eaf0;padding:12px 24px}
+.search-wrap{max-width:900px;margin:0 auto;display:flex;align-items:center;border:1.5px solid #d0d5e8;border-radius:8px;overflow:hidden;background:#fff;transition:border-color .2s}
+.search-wrap:focus-within{border-color:#1a5cff;box-shadow:0 0 0 3px rgba(26,92,255,.1)}
+.search-icon{padding:0 14px;color:#9aa0b0;display:flex;align-items:center}
+.search-icon svg{width:18px;height:18px}
+.search-wrap input{flex:1;border:none;outline:none;font-family:'Inter',sans-serif;font-size:0.9rem;color:#1a1d26;padding:12px 0;background:transparent}
+.search-wrap input::placeholder{color:#aab0c0}
+.search-wrap button{background:#1a5cff;color:#fff;border:none;padding:10px 20px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer}
+
+/* ── PAGE WRAP ── */
+.page-wrap{max-width:952px;margin:0 auto;padding:0 24px}
+
+/* ── BANNER ── */
+.banner-section{padding:16px 0}
+.banner-wrap{border-radius:12px;overflow:hidden;position:relative;background:linear-gradient(135deg,#dce8ff 0%,#e8f0fe 100%);height:165px;display:flex;align-items:center;padding:0 50px}
+.banner-text p{font-size:1.4rem;font-weight:800;color:#0d2e7a;margin-bottom:6px}
+.banner-text span{font-size:0.9rem;color:#1a5cff;font-weight:500}
+.banner-text a{display:inline-block;margin-top:14px;background:#1a5cff;color:#fff;padding:8px 20px;border-radius:6px;font-size:0.82rem;font-weight:600;text-decoration:none}
+.banner-img{position:absolute;right:60px;bottom:0;font-size:80px;opacity:.35}
+.banner-nav{position:absolute;top:50%;transform:translateY(-50%);background:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);color:#444;font-size:16px;line-height:1}
+.banner-nav.prev{left:12px}
+.banner-nav.next{right:12px}
+.banner-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.banner-dots i{width:22px;height:5px;border-radius:3px;background:rgba(0,0,0,.15);display:block}
+.banner-dots i.active{background:#1a5cff}
+
+/* ── SECTION HEADER ── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px}
+.section-head h2{font-size:1rem;font-weight:700;color:#1a1d26}
+.section-head p{font-size:.78rem;color:#6b7280;margin-top:1px}
+.view-all{text-decoration:none;font-size:0.82rem;font-weight:600;color:#1a5cff;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.view-all svg{width:13px;height:13px}
+
+/* ── SCROLL ROWS ── */
+.scroll-wrap{position:relative}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-behavior:smooth}
+.hscroll::-webkit-scrollbar{height:4px}
+.hscroll::-webkit-scrollbar-track{background:#f0f0f0;border-radius:2px}
+.hscroll::-webkit-scrollbar-thumb{background:#c0c8dc;border-radius:2px}
+.scroll-btn{position:absolute;top:40%;transform:translateY(-50%);background:#fff;border:1px solid #e0e4ef;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);color:#444;z-index:10;font-size:16px;line-height:1;transition:all .15s}
+.scroll-btn:hover{background:#f0f4ff;border-color:#1a5cff;color:#1a5cff}
+.scroll-btn.sleft{left:-14px}
+.scroll-btn.sright{right:-14px}
+
+/* ── DOCTOR CARD ── */
+.doc-card{flex-shrink:0;width:170px;background:#fff;border:1px solid #e8eaf0;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative}
+.doc-card:hover{box-shadow:0 4px 16px rgba(26,92,255,.13);border-color:#b8c8ff;transform:translateY(-2px)}
+.doc-img{width:100%;height:110px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8f0fe,#dde8ff);font-size:48px}
+.dot{position:absolute;top:8px;right:8px;width:10px;height:10px;border-radius:50%;border:2px solid #fff}
+.dot.on{background:#22c55e}
+.doc-body{padding:10px}
+.doc-name{font-size:0.8rem;font-weight:600;color:#1a1d26;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-cred{font-size:0.7rem;color:#6b7280;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:4px;margin-bottom:6px}
+.badge.blue{background:#dbeafe;color:#1d4ed8}
+.badge.green{background:#dcfce7;color:#166534}
+.badge.pink{background:#fce7f3;color:#9d174d}
+.badge.orange{background:#ffedd5;color:#c2410c}
+.doc-fee{font-size:0.9rem;font-weight:700;color:#1a1d26}
+.see-btn{width:100%;background:none;border:1.5px solid #1a5cff;color:#1a5cff;border-radius:6px;padding:6px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;margin-top:8px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px}
+.see-btn:hover{background:#1a5cff;color:#fff}
+
+/* ── SPECIALTIES GRID ── */
+.spec-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#e8eaf0;border:1px solid #e8eaf0;border-radius:10px;overflow:hidden}
+.spec-item{background:#fff;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:background .15s;text-align:center}
+.spec-item:hover{background:#f0f4ff}
+.spec-icon{font-size:28px}
+.spec-name{font-size:0.78rem;font-weight:600;color:#1a1d26;line-height:1.3}
+.spec-sub{font-size:0.67rem;color:#6b7280;line-height:1.3}
+
+/* ── STATS BANNER ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.stat-card{background:#fff;border:1px solid #e8eaf0;border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.stat-icon.blue{background:#dbeafe}
+.stat-icon.green{background:#dcfce7}
+.stat-icon.orange{background:#ffedd5}
+.stat-icon.purple{background:#ede9fe}
+.stat-val{font-size:1.4rem;font-weight:800;color:#1a1d26;line-height:1}
+.stat-label{font-size:0.72rem;color:#6b7280;margin-top:2px}
+
+/* ── HOW IT WORKS ── */
+.how-section{background:#fff;padding:32px 24px;margin-top:16px;border-top:1px solid #f0f2f8}
+.how-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 240px;gap:48px;align-items:center}
+.how-label{font-size:0.78rem;font-weight:700;color:#1a5cff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.how-title{font-size:1.4rem;font-weight:800;color:#1a1d26;line-height:1.3;margin-bottom:10px}
+.how-desc{font-size:0.88rem;color:#6b7280;line-height:1.6;margin-bottom:24px}
+.how-steps{display:flex;flex-direction:column;gap:14px}
+.how-step{display:flex;gap:14px}
+.step-icon{width:40px;height:40px;background:#e8f0fe;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.step-text h4{font-size:0.88rem;font-weight:600;color:#1a1d26;margin-bottom:3px}
+.step-text p{font-size:0.78rem;color:#6b7280;line-height:1.5}
+.phone-mockup{background:linear-gradient(180deg,#e8f0fe,#dde8ff);border-radius:24px;width:160px;height:300px;margin:0 auto;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(26,92,255,.18)}
+.phone-screen{width:130px;height:252px;background:#fff;border-radius:14px;overflow:hidden;padding:10px;display:flex;flex-direction:column;gap:5px}
+.ps-bar{height:9px;background:#e8f0fe;border-radius:4px}
+.ps-bar.blue{background:#1a5cff;opacity:.6;width:50%;margin:0 auto}
+.ps-mini{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.ps-cell{background:#f0f4ff;border-radius:6px;height:40px}
+
+/* ── FOOTER ── */
+footer{background:#1a5cff;padding:36px 24px 16px;margin-top:16px}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:220px 1fr 1fr 1fr;gap:24px;margin-bottom:28px}
+.footer-brand{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.footer-brand-name{font-size:1.05rem;font-weight:700;color:#fff}
+.footer-brand-name small{display:block;font-size:0.65rem;color:rgba(255,255,255,.6);font-weight:400}
+.footer-desc{font-size:0.78rem;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:12px}
+.footer-col h4{font-size:0.82rem;font-weight:700;color:#fff;margin-bottom:12px;opacity:.9}
+.footer-col a{display:block;font-size:0.78rem;color:rgba(255,255,255,.7);text-decoration:none;margin-bottom:6px}
+.footer-col a:hover{color:#fff}
+.footer-divider{height:1px;background:rgba(255,255,255,.2);margin:14px 0}
+.footer-bottom{text-align:center;font-size:0.75rem;color:rgba(255,255,255,.6)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:20px 20px 16px;border-bottom:1px solid #f0f2f8;display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:1rem;font-weight:700;color:#1a1d26}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9aa0b0;line-height:1;padding:2px 6px;border-radius:4px}
+.modal-close:hover{background:#f5f5f5;color:#1a1d26}
+.modal-body{padding:20px}
+.tab-row{display:flex;gap:4px;background:#f5f7fa;border-radius:8px;padding:4px;margin-bottom:18px}
+.tab-btn{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;background:none;color:#6b7280;transition:all .15s}
+.tab-btn.active{background:#fff;color:#1a5cff;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:0.78rem;font-weight:600;color:#374151;margin-bottom:5px}
+.form-group input,.form-group select{width:100%;border:1.5px solid #d0d5e8;border-radius:7px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:0.88rem;color:#1a1d26;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus{border-color:#1a5cff;box-shadow:0 0 0 3px rgba(26,92,255,.09)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.submit-btn{width:100%;background:#1a5cff;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:6px;transition:background .15s}
+.submit-btn:hover{background:#1248d6}
+.submit-btn:disabled{background:#a5b4fc;cursor:not-allowed}
+.msg{font-size:0.8rem;padding:8px 12px;border-radius:6px;margin-top:10px;display:none}
+.msg.success{background:#dcfce7;color:#166534;display:block}
+.msg.error{background:#fee2e2;color:#b91c1c;display:block}
+.role-select{display:flex;gap:8px;margin-bottom:16px}
+.role-opt{flex:1;border:1.5px solid #e0e4ef;border-radius:8px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s;font-size:0.8rem;font-weight:600;color:#6b7280}
+.role-opt.sel{border-color:#1a5cff;background:#f0f4ff;color:#1a5cff}
+
+/* ── BOOK MODAL ── */
+.doc-profile-header{display:flex;align-items:center;gap:14px;padding:16px;background:#f0f4ff;border-radius:10px;margin-bottom:18px}
+.doc-profile-avatar{width:52px;height:52px;background:#1a5cff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.doc-profile-info h4{font-size:0.92rem;font-weight:700;color:#1a1d26}
+.doc-profile-info p{font-size:0.78rem;color:#6b7280;margin-top:2px}
+.day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.day-pill{padding:7px 4px;border:1.5px solid #e0e4ef;border-radius:7px;text-align:center;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all .15s;color:#6b7280}
+.day-pill.avail{border-color:#bbf7d0;color:#166534;background:#f0fdf4}
+.day-pill.avail:hover,.day-pill.sel{border-color:#1a5cff;background:#1a5cff;color:#fff}
+
+/* ── DASHBOARD SIDEBAR PAGES (loaded in modals) ── */
+.dash-section{display:none}
+.dash-section.active{display:block}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.dash-stat{background:#f0f4ff;border-radius:10px;padding:14px;text-align:center}
+.dash-stat .val{font-size:1.6rem;font-weight:800;color:#1a5cff}
+.dash-stat .lbl{font-size:0.72rem;color:#6b7280;margin-top:2px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#f5f7fa;padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #e8eaf0}
+td{padding:10px 12px;border-bottom:1px solid #f0f2f8;color:#1a1d26}
+tr:hover td{background:#fafbff}
+.pill{display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:20px}
+.pill.pending{background:#fef9c3;color:#a16207}
+.pill.confirmed{background:#dcfce7;color:#166534}
+.pill.cancelled{background:#fee2e2;color:#b91c1c}
+.pill.completed{background:#dbeafe;color:#1d4ed8}
+.pill.paid{background:#dcfce7;color:#166534}
+.pill.unpaid{background:#fee2e2;color:#b91c1c}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1d26;color:#fff;padding:12px 20px;border-radius:8px;font-size:0.85rem;font-weight:500;z-index:9999;transition:all .3s;transform:translateY(80px);opacity:0;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#166534}
+#toast.error{background:#b91c1c}
+
+/* ── LOADING ── */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{flex-shrink:0;width:170px;height:230px}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2c-4.418 0-8 3.582-8 8 0 3.54 2.29 6.543 5.5 7.6V20h5v-2.4C17.71 16.543 20 13.54 20 10c0-4.418-3.582-8-8-8zm-1 14v-2h2v2h-2zm1-4c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">DocPatientCareHub</div>
+      <span class="logo-sub">Healthcare Anytime Anywhere</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Consultation</a>
+    <a href="doctors.html">Find Doctors</a>
+    <a href="appointments.html">Appointments</a>
+    <a href="billing.html">Billing</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <button class="nav-btn-outline" onclick="openAuth('login')">Log in</button>
+    <button class="nav-btn" onclick="openAuth('register')">Register</button>
+  </div>
+</nav>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-wrap">
+    <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+    <input type="text" id="mainSearch" placeholder="Search by doctor name or specialization…" oninput="liveSearch(this.value)"/>
+    <button onclick="goSearch()">Search</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+<!-- BANNER -->
+<div class="banner-section">
+  <div class="banner-wrap">
+    <button class="banner-nav prev" onclick="changeBanner(-1)">&#8249;</button>
+    <div class="banner-text">
+      <p id="bannerTitle">Book a Doctor in Minutes</p>
+      <span id="bannerSub">Consult top specialists from home — fast, secure, affordable.</span>
+      <a href="doctors.html">Find a Doctor →</a>
+    </div>
+    <div class="banner-img" id="bannerEmoji">🏥</div>
+    <button class="banner-nav next" onclick="changeBanner(1)">&#8250;</button>
+    <div class="banner-dots"><i class="active" id="bd0"></i><i id="bd1"></i><i id="bd2"></i></div>
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-icon blue">👨‍⚕️</div><div><div class="stat-val" id="statDoctors">—</div><div class="stat-label">Specialist Doctors</div></div></div>
+  <div class="stat-card"><div class="stat-icon green">👥</div><div><div class="stat-val" id="statPatients">—</div><div class="stat-label">Happy Patients</div></div></div>
+  <div class="stat-card"><div class="stat-icon orange">📅</div><div><div class="stat-val" id="statAppts">—</div><div class="stat-label">Appointments Today</div></div></div>
+  <div class="stat-card"><div class="stat-icon purple">🏢</div><div><div class="stat-val" id="statDepts">8</div><div class="stat-label">Departments</div></div></div>
+</div>
+
+<!-- POPULAR SPECIALISTS -->
+<div class="section-head">
+  <div><h2>Popular Specialists</h2><p>Book from our top-rated doctors</p></div>
+  <a href="doctors.html" class="view-all">View All <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+<div class="scroll-wrap">
+  <button class="scroll-btn sleft" onclick="scrollSection(this,-1)">&#8249;</button>
+  <div class="hscroll" id="doctorScroll">
+    <!-- populated by JS -->
+    <div class="skel-card skeleton"></div>
+    <div class="skel-card skeleton"></div>
+    <div class="skel-card skeleton"></div>
+    <div class="skel-card skeleton"></div>
+    <div class="skel-card skeleton"></div>
+  </div>
+  <button class="scroll-btn sright" onclick="scrollSection(this,1)">&#8250;</button>
+</div>
+
+<!-- SPECIALTIES -->
+<div class="section-head" style="margin-top:20px">
+  <div><h2>Browse by Speciality</h2></div>
+</div>
+<div class="spec-grid" id="specGrid">
+  <!-- populated by JS -->
+</div>
+
+<!-- HOW IT WORKS -->
+</div><!-- end page-wrap -->
+
+<div class="how-section">
+  <div class="how-inner">
+    <div>
+      <div class="how-label">Simple Process</div>
+      <div class="how-title">Get doctor consultation in 3 easy steps</div>
+      <div class="how-desc">DocPatientCareHub connects you to verified specialists instantly. No waiting rooms. No paperwork. Just quality healthcare.</div>
+      <div class="how-steps">
+        <div class="how-step"><div class="step-icon">🔍</div><div class="step-text"><h4>Find a Doctor</h4><p>Search by specialization, department or doctor name and check real-time availability.</p></div></div>
+        <div class="how-step"><div class="step-icon">📅</div><div class="step-text"><h4>Book Appointment</h4><p>Choose your preferred date and time slot. Get instant confirmation and billing.</p></div></div>
+        <div class="how-step"><div class="step-icon">💊</div><div class="step-text"><h4>Get Prescription</h4><p>Receive digital prescriptions and medicine records right after your consultation.</p></div></div>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <div class="ps-bar blue"></div>
+          <div class="ps-bar" style="width:80%"></div>
+          <div class="ps-bar" style="width:60%"></div>
+          <div class="ps-mini"><div class="ps-cell"></div><div class="ps-cell"></div><div class="ps-cell"></div><div class="ps-cell"></div></div>
+          <div class="ps-bar" style="width:90%"></div>
+          <div class="ps-bar" style="width:55%"></div>
+          <div class="ps-mini"><div class="ps-cell" style="background:#fce7f3"></div><div class="ps-cell" style="background:#dcfce7"></div><div class="ps-cell" style="background:#fef9c3"></div><div class="ps-cell" style="background:#ede9fe"></div></div>
+          <div class="ps-bar blue" style="width:60%;height:8px;border-radius:4px;opacity:.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">
+          <div style="width:28px;height:28px;background:rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px">🏥</div>
+          <div class="footer-brand-name">DocPatientCareHub<small>Healthcare Anytime Anywhere</small></div>
+        </div>
+        <p class="footer-desc">DocPatientCareHub – Meet to Doctor: Patient Care. A comprehensive digital healthcare management platform.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="doctors.html">Find Doctors</a>
+        <a href="appointments.html">Appointments</a>
+        <a href="billing.html">Billing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Specialities</h4>
+        <a href="#">Cardiology</a>
+        <a href="#">Neurology</a>
+        <a href="#">Pediatrics</a>
+        <a href="#">Dermatology</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Contact Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="backend.php?action=setup" target="_blank">🔧 Setup DB</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">Copyright &copy; 2026 DocPatientCareHub – Meet to Doctor: Patient Care. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     AUTH MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="authTitle">Welcome to DocPatientCareHub</h3>
+      <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-row">
+        <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">Login</button>
+        <button class="tab-btn" id="tabReg" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm">
+        <div class="role-select" id="loginRoles">
+          <div class="role-opt sel" onclick="selRole(this,'patient')">🧑‍💼 Patient</div>
+          <div class="role-opt" onclick="selRole(this,'doctor')">👨‍⚕️ Doctor</div>
+          <div class="role-opt" onclick="selRole(this,'admin')">🔑 Admin</div>
+        </div>
+        <input type="hidden" id="loginRole" value="patient"/>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@email.com"/></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+        <button class="submit-btn" onclick="doLogin()" id="loginBtn">Login</button>
+        <div class="msg" id="loginMsg"></div>
+      </div>
+
+      <!-- REGISTER (patient only) -->
+      <div id="registerForm" style="display:none">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"/></div>
+          <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="you@email.com"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone</label><input type="text" id="regPhone" placeholder="01XXXXXXXXX"/></div>
+          <div class="form-group"><label>Age</label><input type="number" id="regAge" placeholder="25"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Gender</label>
+            <select id="regGender"><option>Male</option><option>Female</option><option>Other</option></select>
+          </div>
+          <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min 6 chars"/></div>
+        </div>
+        <div class="form-group"><label>Address</label><input type="text" id="regAddress" placeholder="Your address"/></div>
+        <button class="submit-btn" onclick="doRegister()" id="regBtn">Create Account</button>
+        <div class="msg" id="regMsg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BOOK APPOINTMENT MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Book Appointment</h3>
+      <button class="modal-close" onclick="closeModal('bookModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="doc-profile-header" id="bookDoctorInfo">
+        <div class="doc-profile-avatar" id="bookDocEmoji">👨‍⚕️</div>
+        <div class="doc-profile-info">
+          <h4 id="bookDocName">Dr. Name</h4>
+          <p id="bookDocSpec">Specialization · Department</p>
+          <p id="bookDocFee" style="font-weight:700;color:#1a5cff;margin-top:4px"></p>
+        </div>
+      </div>
+      <div class="form-group"><label>Available Days</label>
+        <div class="day-grid" id="availDays"><!-- JS fills --></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date</label><input type="date" id="bookDate" min=""/></div>
+        <div class="form-group"><label>Time</label><input type="time" id="bookTime"/></div>
+      </div>
+      <div class="form-group"><label>Notes (optional)</label><input type="text" id="bookNotes" placeholder="Symptoms or reason…"/></div>
+      <button class="submit-btn" onclick="doBook()" id="bookBtn">Confirm Booking</button>
+      <div class="msg" id="bookMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     DASHBOARD MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="dashModal">
+  <div class="modal" style="width:700px;max-width:98vw">
+    <div class="modal-head">
+      <h3 id="dashTitle">My Dashboard</h3>
+      <button class="modal-close" onclick="closeModal('dashModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-row" id="dashTabs"></div>
+      <div id="dashContent">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════════
+const API = 'backend.php';
+
+// ══════════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════════
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  setTimeout(() => el.className = '', 3000);
+}
+
+// ══════════════════════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+window.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+});
+
+// ══════════════════════════════════════════════════════════
+//  AUTH STATE
+// ══════════════════════════════════════════════════════════
+let currentUser = JSON.parse(localStorage.getItem('dtUser') || 'null');
+
+function updateNavForUser() {
+  const nr = document.getElementById('navRight');
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    nr.innerHTML = `
+      <div class="user-chip" onclick="openDashboard()">
+        <div class="user-avatar">${initials}</div>
+        <span>${currentUser.name.split(' ')[0]}</span>
+      </div>
+      <button class="nav-btn-outline" onclick="doLogout()">Logout</button>`;
+  } else {
+    nr.innerHTML = `
+      <button class="nav-btn-outline" onclick="openAuth('login')">Log in</button>
+      <button class="nav-btn" onclick="openAuth('register')">Register</button>`;
+  }
+}
+
+function openAuth(tab) { switchAuthTab(tab); openModal('authModal'); }
+
+function switchAuthTab(tab) {
+  document.getElementById('loginForm').style.display  = tab==='login' ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab==='register' ? '' : 'none';
+  document.getElementById('tabLogin').className = 'tab-btn' + (tab==='login' ? ' active' : '');
+  document.getElementById('tabReg').className   = 'tab-btn' + (tab==='register' ? ' active' : '');
+  document.getElementById('authTitle').textContent = tab==='login' ? 'Welcome Back' : 'Create Account';
+  document.getElementById('loginMsg').className = 'msg';
+  document.getElementById('regMsg').className   = 'msg';
+}
+
+function selRole(el, role) {
+  document.querySelectorAll('#loginRoles .role-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('loginRole').value = role;
+}
+
+async function doLogin() {
+  const btn = document.getElementById('loginBtn');
+  const msg = document.getElementById('loginMsg');
+  btn.disabled = true; btn.textContent = 'Logging in…';
+  const fd = new FormData();
+  fd.append('email', document.getElementById('loginEmail').value);
+  fd.append('password', document.getElementById('loginPass').value);
+  fd.append('role', document.getElementById('loginRole').value);
+  try {
+    const r = await fetch(`${API}?action=login`, {method:'POST', body:fd});
+    const d = await r.json();
+    if (d.success) {
+      currentUser = d.user;
+      localStorage.setItem('dtUser', JSON.stringify(d.user));
+      closeModal('authModal');
+      updateNavForUser();
+      toast('Welcome back, ' + d.user.name + '!', 'success');
+    } else {
+      msg.textContent = d.message; msg.className = 'msg error';
+    }
+  } catch(e) {
+    msg.textContent = 'Could not connect to server. Make sure PHP is running.'; msg.className='msg error';
+  }
+  btn.disabled = false; btn.textContent = 'Login';
+}
+
+async function doRegister() {
+  const btn = document.getElementById('regBtn');
+  const msg = document.getElementById('regMsg');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  const fd = new FormData();
+  fd.append('name',     document.getElementById('regName').value);
+  fd.append('email',    document.getElementById('regEmail').value);
+  fd.append('phone',    document.getElementById('regPhone').value);
+  fd.append('age',      document.getElementById('regAge').value);
+  fd.append('gender',   document.getElementById('regGender').value);
+  fd.append('password', document.getElementById('regPass').value);
+  fd.append('address',  document.getElementById('regAddress').value);
+  try {
+    const r = await fetch(`${API}?action=register_patient`, {method:'POST', body:fd});
+    const d = await r.json();
+    if (d.success) {
+      msg.textContent = d.message + ' You can now login.'; msg.className='msg success';
+      setTimeout(() => switchAuthTab('login'), 1800);
+    } else {
+      msg.textContent = d.message; msg.className='msg error';
+    }
+  } catch(e) {
+    msg.textContent = 'Could not connect to server.'; msg.className='msg error';
+  }
+  btn.disabled = false; btn.textContent = 'Create Account';
+}
+
+async function doLogout() {
+  await fetch(`${API}?action=logout`, {method:'POST'}).catch(()=>{});
+  currentUser = null;
+  localStorage.removeItem('dtUser');
+  updateNavForUser();
+  toast('Logged out successfully.');
+}
+
+// ══════════════════════════════════════════════════════════
+//  BANNER
+// ══════════════════════════════════════════════════════════
+const banners = [
+  {title:'Book a Doctor in Minutes', sub:'Consult top specialists from home — fast, secure, affordable.', emoji:'🏥'},
+  {title:'Your Health, Our Priority', sub:'500+ verified doctors across 8 departments ready for you.', emoji:'💊'},
+  {title:'Digital Prescriptions', sub:'Get instant prescriptions and medicine records after every visit.', emoji:'📋'}
+];
+let bannerIdx = 0;
+function changeBanner(dir) {
+  bannerIdx = (bannerIdx + dir + banners.length) % banners.length;
+  document.getElementById('bannerTitle').textContent = banners[bannerIdx].title;
+  document.getElementById('bannerSub').textContent   = banners[bannerIdx].sub;
+  document.getElementById('bannerEmoji').textContent = banners[bannerIdx].emoji;
+  for(let i=0;i<3;i++) document.getElementById('bd'+i).className = i===bannerIdx?'active':'';
+}
+setInterval(() => changeBanner(1), 5000);
+
+// ══════════════════════════════════════════════════════════
+//  LOAD DOCTORS
+// ══════════════════════════════════════════════════════════
+const docEmojis = {'Cardiology':'❤️','Neurology':'🧠','Orthopedics':'🦴','Dermatology':'🔬','Pediatrics':'👶','Gynecology':'🌸','ENT':'👂','General Medicine':'🩺'};
+const badgeColors = ['blue','green','pink','orange'];
+
+async function loadDoctors() {
+  try {
+    const r = await fetch(`${API}?action=get_doctors`);
+    const d = await r.json();
+    const wrap = document.getElementById('doctorScroll');
+    if (!d.success || !d.data.length) {
+      wrap.innerHTML = '<div style="padding:20px;color:#6b7280;font-size:.85rem;">No doctors yet. <a href="backend.php?action=setup" target="_blank">Run setup first →</a></div>';
+      return;
+    }
+    wrap.innerHTML = d.data.slice(0,10).map((doc,i) => `
+      <div class="doc-card" onclick="openBook(${JSON.stringify(doc).replace(/"/g,'&quot;')})">
+        <div class="doc-img">${docEmojis[doc.department_name]||'👨‍⚕️'}<div class="dot on"></div></div>
+        <div class="doc-body">
+          <div class="doc-name">Dr. ${doc.name}</div>
+          <div class="doc-cred">${doc.specialization||doc.department_name}</div>
+          <span class="badge ${badgeColors[i%4]}">${doc.department_name}</span>
+          <div class="doc-fee">৳${parseFloat(doc.fee).toLocaleString()}</div>
+          <button class="see-btn" onclick="event.stopPropagation();openBook(${JSON.stringify(doc).replace(/"/g,'&quot;')})">
+            Book Now →
+          </button>
+        </div>
+      </div>`).join('');
+    // Update stats
+    document.getElementById('statDoctors').textContent = d.data.length + '+';
+  } catch(e) {
+    document.getElementById('doctorScroll').innerHTML = '<div style="padding:20px;color:#b91c1c;font-size:.85rem;">⚠️ Backend offline. Place files on a PHP server and run <a href="backend.php?action=setup">setup</a>.</div>';
+  }
+}
+
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}?action=get_stats`);
+    const d = await r.json();
+    if (d.success) {
+      document.getElementById('statPatients').textContent = d.data.total_patients + '+';
+      document.getElementById('statAppts').textContent    = d.data.total_appointments + '+';
+    }
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════
+//  SPECIALTIES
+// ══════════════════════════════════════════════════════════
+async function loadSpecialties() {
+  try {
+    const r = await fetch(`${API}?action=get_departments`);
+    const d = await r.json();
+    const grid = document.getElementById('specGrid');
+    if (!d.success) return;
+    grid.innerHTML = d.data.map(dep => `
+      <div class="spec-item" onclick="filterByDept(${dep.department_id},'${dep.department_name}')">
+        <div class="spec-icon">${docEmojis[dep.department_name]||'🏥'}</div>
+        <div class="spec-name">${dep.department_name}</div>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+function filterByDept(id, name) {
+  window.location.href = `doctors.html?dept=${id}&name=${encodeURIComponent(name)}`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  SEARCH
+// ══════════════════════════════════════════════════════════
+function liveSearch(v) { /* real-time handled in doctors.html */ }
+function goSearch() {
+  const v = document.getElementById('mainSearch').value.trim();
+  if (v) window.location.href = `doctors.html?search=${encodeURIComponent(v)}`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  BOOK APPOINTMENT
+// ══════════════════════════════════════════════════════════
+let bookingDoc = null;
+
+async function openBook(doc) {
+  if (!currentUser) { toast('Please login first!', 'error'); openAuth('login'); return; }
+  if (currentUser.role !== 'patient') { toast('Only patients can book appointments.', 'error'); return; }
+  bookingDoc = doc;
+  document.getElementById('bookDocEmoji').textContent = docEmojis[doc.department_name]||'👨‍⚕️';
+  document.getElementById('bookDocName').textContent  = 'Dr. ' + doc.name;
+  document.getElementById('bookDocSpec').textContent  = (doc.specialization||'') + ' · ' + doc.department_name;
+  document.getElementById('bookDocFee').textContent   = '৳' + parseFloat(doc.fee).toLocaleString() + ' consultation fee';
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bookDate').min = today;
+  document.getElementById('bookDate').value = today;
+  document.getElementById('bookTime').value = '10:00';
+  document.getElementById('bookMsg').className = 'msg';
+
+  // Load availability
+  const dayGrid = document.getElementById('availDays');
+  dayGrid.innerHTML = '<div style="color:#6b7280;font-size:.78rem;">Loading…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_doctor_availability&doctor_id=${doc.doctor_id}`);
+    const av = await r.json();
+    if (av.data && av.data.length) {
+      dayGrid.innerHTML = av.data.map(a => `
+        <div class="day-pill avail" title="${a.start_time}–${a.end_time}">${a.day_of_week.slice(0,3)}<br><small>${a.start_time.slice(0,5)}</small></div>`).join('');
+    } else {
+      dayGrid.innerHTML = '<div style="color:#6b7280;font-size:.78rem;grid-column:1/-1">No scheduled slots — you can still book manually.</div>';
+    }
+  } catch(e) { dayGrid.innerHTML = ''; }
+
+  openModal('bookModal');
+}
+
+async function doBook() {
+  const btn = document.getElementById('bookBtn');
+  const msg = document.getElementById('bookMsg');
+  btn.disabled = true; btn.textContent = 'Booking…';
+  const fd = new FormData();
+  fd.append('doctor_id', bookingDoc.doctor_id);
+  fd.append('date',  document.getElementById('bookDate').value);
+  fd.append('time',  document.getElementById('bookTime').value);
+  fd.append('notes', document.getElementById('bookNotes').value);
+  try {
+    const r = await fetch(`${API}?action=book_appointment`, {method:'POST', body:fd});
+    const d = await r.json();
+    if (d.success) {
+      msg.textContent = '✅ ' + d.message; msg.className='msg success';
+      toast('Appointment booked! Check your appointments.', 'success');
+      setTimeout(() => closeModal('bookModal'), 2000);
+    } else {
+      msg.textContent = d.message; msg.className='msg error';
+    }
+  } catch(e) {
+    msg.textContent = 'Connection error.'; msg.className='msg error';
+  }
+  btn.disabled=false; btn.textContent='Confirm Booking';
+}
+
+// ══════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════
+async function openDashboard() {
+  if (!currentUser) return;
+  document.getElementById('dashTitle').textContent = currentUser.name + "'s Dashboard";
+  const tabs = document.getElementById('dashTabs');
+  const content = document.getElementById('dashContent');
+
+  if (currentUser.role === 'patient') {
+    tabs.innerHTML = `
+      <button class="tab-btn active" onclick="loadMyAppts(this)">📅 Appointments</button>
+      <button class="tab-btn" onclick="loadMyBilling(this)">💳 Billing</button>
+      <button class="tab-btn" onclick="loadMyMeds(this)">💊 Medicines</button>
+      <button class="tab-btn" onclick="loadProfile(this)">👤 Profile</button>`;
+    await loadMyAppts(tabs.firstElementChild);
+  } else if (currentUser.role === 'doctor') {
+    tabs.innerHTML = `
+      <button class="tab-btn active" onclick="loadMyAppts(this)">📅 My Patients</button>
+      <button class="tab-btn" onclick="loadProfile(this)">👤 Profile</button>`;
+    await loadMyAppts(tabs.firstElementChild);
+  } else if (currentUser.role === 'admin') {
+    tabs.innerHTML = `
+      <button class="tab-btn active" onclick="loadAdminStats(this)">📊 Overview</button>
+      <button class="tab-btn" onclick="loadAdminDoctors(this)">👨‍⚕️ Doctors</button>
+      <button class="tab-btn" onclick="loadAdminPatients(this)">👥 Patients</button>
+      <button class="tab-btn" onclick="loadAdminAppts(this)">📅 Appointments</button>`;
+    await loadAdminStats(tabs.firstElementChild);
+  }
+  openModal('dashModal');
+}
+
+function activateTab(btn) {
+  document.querySelectorAll('#dashTabs .tab-btn').forEach(b => b.className='tab-btn');
+  btn.className='tab-btn active';
+}
+
+async function loadMyAppts(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = '<div style="color:#6b7280;padding:20px">Loading…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_appointments`);
+    const d = await r.json();
+    if (!d.data || !d.data.length) { content.innerHTML='<div style="padding:20px;color:#6b7280">No appointments yet.</div>'; return; }
+    content.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Date</th><th>Time</th><th>${currentUser.role==='patient'?'Doctor':'Patient'}</th><th>Dept</th><th>Status</th><th>Action</th></tr>
+      ${d.data.map(a => `<tr>
+        <td>${a.date}</td><td>${a.time.slice(0,5)}</td>
+        <td>${currentUser.role==='patient'?'Dr. '+a.doctor_name:a.patient_name}</td>
+        <td>${a.department_name}</td>
+        <td><span class="pill ${a.status}">${a.status}</span></td>
+        <td>${a.status==='pending'?`<button onclick="updateStatus(${a.appointment_id},'cancelled')" style="font-size:.72rem;border:none;background:#fee2e2;color:#b91c1c;padding:3px 8px;border-radius:4px;cursor:pointer">Cancel</button>`:'—'}</td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) { content.innerHTML='<div style="color:#b91c1c;padding:20px">Connection error.</div>'; }
+}
+
+async function loadMyBilling(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = '<div style="color:#6b7280;padding:20px">Loading…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_billing`);
+    const d = await r.json();
+    if (!d.data || !d.data.length) { content.innerHTML='<div style="padding:20px;color:#6b7280">No bills yet.</div>'; return; }
+    content.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Date</th><th>Doctor</th><th>Amount</th><th>Status</th><th>Action</th></tr>
+      ${d.data.map(b => `<tr>
+        <td>${b.date}</td><td>Dr. ${b.doctor_name}</td>
+        <td>৳${parseFloat(b.amount).toLocaleString()}</td>
+        <td><span class="pill ${b.status}">${b.status}</span></td>
+        <td>${b.status==='unpaid'?`<button onclick="payBill(${b.bill_id})" style="font-size:.72rem;border:none;background:#dcfce7;color:#166534;padding:3px 8px;border-radius:4px;cursor:pointer">Pay Now</button>`:'✅'}</td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) { content.innerHTML='<div style="color:#b91c1c;padding:20px">Connection error.</div>'; }
+}
+
+async function loadMyMeds(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = '<div style="color:#6b7280;padding:20px">Loading…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_medicine&patient_id=${currentUser.id}`);
+    const d = await r.json();
+    if (!d.data || !d.data.length) { content.innerHTML='<div style="padding:20px;color:#6b7280">No medicine records yet.</div>'; return; }
+    content.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Medicine</th><th>Quantity/Dose</th><th>Expires</th><th>Prescribed</th></tr>
+      ${d.data.map(m => `<tr>
+        <td>💊 ${m.name}</td><td>${m.quality||'—'}</td>
+        <td>${m.expire_date||'—'}</td><td>${m.created_at.slice(0,10)}</td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) { content.innerHTML='<div style="color:#b91c1c;padding:20px">Connection error.</div>'; }
+}
+
+async function loadProfile(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = '<div style="color:#6b7280;padding:20px">Loading…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_profile`);
+    const d = await r.json();
+    const p = d.data || {};
+    content.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group"><label>Full Name</label><input type="text" id="pName" value="${p.name||''}"/></div>
+        <div class="form-group"><label>Email</label><input type="text" value="${p.email||''}" disabled style="background:#f5f7fa"/></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="pPhone" value="${p.phone||''}"/></div>
+        ${currentUser.role==='patient'?`<div class="form-group"><label>Age</label><input type="number" id="pAge" value="${p.age||''}"/></div>`:''}
+        ${currentUser.role==='doctor'?`<div class="form-group"><label>Specialization</label><input type="text" id="pSpec" value="${p.specialization||''}"/></div>`:''}
+        ${currentUser.role==='patient'?`<div class="form-group" style="grid-column:1/-1"><label>Address</label><input type="text" id="pAddr" value="${p.address||''}"/></div>`:''}
+      </div>
+      <button class="submit-btn" style="margin-top:12px" onclick="saveProfile()">Save Changes</button>
+      <div class="msg" id="profileMsg"></div>
+      <hr style="margin:20px 0;border:none;border-top:1px solid #f0f2f8"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div class="form-group"><label>Current Password</label><input type="password" id="cpOld" placeholder="Current"/></div>
+        <div class="form-group"><label>New Password</label><input type="password" id="cpNew" placeholder="New"/></div>
+        <div class="form-group" style="display:flex;align-items:flex-end"><button class="submit-btn" style="padding:9px" onclick="changePass()">Change</button></div>
+      </div>`;
+  } catch(e) { content.innerHTML='<div style="color:#b91c1c">Connection error.</div>'; }
+}
+
+async function saveProfile() {
+  const fd = new FormData();
+  fd.append('name',  document.getElementById('pName')?.value||'');
+  fd.append('phone', document.getElementById('pPhone')?.value||'');
+  if (currentUser.role==='patient') {
+    fd.append('age',     document.getElementById('pAge')?.value||'');
+    fd.append('address', document.getElementById('pAddr')?.value||'');
+  }
+  if (currentUser.role==='doctor') fd.append('specialization', document.getElementById('pSpec')?.value||'');
+  const r = await fetch(`${API}?action=update_profile`, {method:'POST', body:fd});
+  const d = await r.json();
+  const msg = document.getElementById('profileMsg');
+  msg.textContent = d.message; msg.className = 'msg ' + (d.success?'success':'error');
+  if (d.success) { currentUser.name = document.getElementById('pName').value; localStorage.setItem('dtUser',JSON.stringify(currentUser)); updateNavForUser(); }
+}
+
+async function changePass() {
+  const fd = new FormData();
+  fd.append('old_password', document.getElementById('cpOld').value);
+  fd.append('new_password', document.getElementById('cpNew').value);
+  const r = await fetch(`${API}?action=change_password`, {method:'POST', body:fd});
+  const d = await r.json();
+  toast(d.message, d.success?'success':'error');
+}
+
+async function loadAdminStats(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = 'Loading…';
+  try {
+    const r = await fetch(`${API}?action=get_stats`);
+    const d = await r.json();
+    const s = d.data;
+    content.innerHTML = `
+      <div class="dash-grid">
+        <div class="dash-stat"><div class="val">${s.total_patients}</div><div class="lbl">Total Patients</div></div>
+        <div class="dash-stat"><div class="val">${s.total_doctors}</div><div class="lbl">Doctors</div></div>
+        <div class="dash-stat"><div class="val">${s.total_appointments}</div><div class="lbl">Appointments</div></div>
+        <div class="dash-stat"><div class="val">${s.pending_appointments}</div><div class="lbl">Pending</div></div>
+        <div class="dash-stat"><div class="val">৳${parseFloat(s.total_revenue).toLocaleString()}</div><div class="lbl">Revenue</div></div>
+        <div class="dash-stat"><div class="val">${s.unpaid_bills}</div><div class="lbl">Unpaid Bills</div></div>
+      </div>`;
+  } catch(e) { content.innerHTML='<div style="color:#b91c1c">Connection error.</div>'; }
+}
+
+async function loadAdminDoctors(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <input type="text" id="ndName"  placeholder="Name" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"/>
+      <input type="email" id="ndEmail" placeholder="Email" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"/>
+      <input type="text" id="ndSpec"  placeholder="Specialization" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"/>
+      <input type="text" id="ndPhone" placeholder="Phone" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"/>
+      <input type="number" id="ndFee" placeholder="Fee (৳)" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"/>
+      <select id="ndDept" style="border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem"><option value="">Select Department</option></select>
+    </div>
+    <input type="password" id="ndPass" placeholder="Doctor password (default: doctor123)" style="width:100%;border:1.5px solid #d0d5e8;border-radius:7px;padding:8px 10px;font-size:.85rem;margin-bottom:10px"/>
+    <button class="submit-btn" style="width:auto;padding:9px 22px" onclick="addDoctor()">+ Add Doctor</button>
+    <div class="msg" id="addDocMsg" style="margin:8px 0"></div>
+    <div id="doctorTable" style="margin-top:14px">Loading…</div>`;
+  // populate dept dropdown
+  try {
+    const r = await fetch(`${API}?action=get_departments`);
+    const d = await r.json();
+    const sel = document.getElementById('ndDept');
+    d.data.forEach(dep => sel.innerHTML += `<option value="${dep.department_id}">${dep.department_name}</option>`);
+  } catch(e) {}
+  // load table
+  await refreshDoctorTable();
+}
+
+async function refreshDoctorTable() {
+  const wrap = document.getElementById('doctorTable');
+  if (!wrap) return;
+  try {
+    const r = await fetch(`${API}?action=get_doctors`);
+    const d = await r.json();
+    wrap.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Name</th><th>Department</th><th>Specialization</th><th>Fee</th><th>Status</th><th>Action</th></tr>
+      ${d.data.map(doc => `<tr>
+        <td>Dr. ${doc.name}</td><td>${doc.department_name}</td>
+        <td>${doc.specialization||'—'}</td><td>৳${parseFloat(doc.fee).toLocaleString()}</td>
+        <td><span class="pill ${doc.status}">${doc.status}</span></td>
+        <td><button onclick="deleteDoctor(${doc.doctor_id})" style="font-size:.72rem;border:none;background:#fee2e2;color:#b91c1c;padding:3px 8px;border-radius:4px;cursor:pointer">Remove</button></td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) {}
+}
+
+async function addDoctor() {
+  const fd = new FormData();
+  fd.append('name',           document.getElementById('ndName').value);
+  fd.append('email',          document.getElementById('ndEmail').value);
+  fd.append('phone',          document.getElementById('ndPhone').value);
+  fd.append('specialization', document.getElementById('ndSpec').value);
+  fd.append('fee',            document.getElementById('ndFee').value||500);
+  fd.append('department_id',  document.getElementById('ndDept').value);
+  fd.append('password',       document.getElementById('ndPass').value||'doctor123');
+  const r   = await fetch(`${API}?action=add_doctor`, {method:'POST', body:fd});
+  const d   = await r.json();
+  const msg = document.getElementById('addDocMsg');
+  msg.textContent = d.message; msg.className='msg '+(d.success?'success':'error');
+  if (d.success) { refreshDoctorTable(); loadDoctors(); }
+}
+
+async function deleteDoctor(id) {
+  if (!confirm('Remove this doctor?')) return;
+  const fd = new FormData(); fd.append('doctor_id', id);
+  await fetch(`${API}?action=delete_doctor`, {method:'POST', body:fd});
+  refreshDoctorTable(); loadDoctors();
+}
+
+async function loadAdminPatients(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML='Loading…';
+  try {
+    const r = await fetch(`${API}?action=get_patients`);
+    const d = await r.json();
+    content.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Name</th><th>Email</th><th>Phone</th><th>Gender</th><th>Age</th><th>Joined</th></tr>
+      ${d.data.map(p => `<tr>
+        <td>${p.name}</td><td>${p.email}</td><td>${p.phone||'—'}</td>
+        <td>${p.gender||'—'}</td><td>${p.age||'—'}</td><td>${p.created_at.slice(0,10)}</td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) { content.innerHTML='Connection error.'; }
+}
+
+async function loadAdminAppts(btn) {
+  activateTab(btn);
+  const content = document.getElementById('dashContent');
+  content.innerHTML='Loading…';
+  try {
+    const r = await fetch(`${API}?action=get_appointments`);
+    const d = await r.json();
+    content.innerHTML = `<div class="table-wrap"><table>
+      <tr><th>Date</th><th>Patient</th><th>Doctor</th><th>Dept</th><th>Status</th><th>Update</th></tr>
+      ${d.data.map(a => `<tr>
+        <td>${a.date}</td><td>${a.patient_name}</td><td>Dr. ${a.doctor_name}</td>
+        <td>${a.department_name}</td>
+        <td><span class="pill ${a.status}">${a.status}</span></td>
+        <td>
+          ${a.status==='pending'?`<button onclick="updateStatus(${a.appointment_id},'confirmed')" style="font-size:.68rem;border:none;background:#dcfce7;color:#166534;padding:3px 7px;border-radius:4px;cursor:pointer;margin-right:3px">✓ Confirm</button>`:''}
+          ${['pending','confirmed'].includes(a.status)?`<button onclick="updateStatus(${a.appointment_id},'completed')" style="font-size:.68rem;border:none;background:#dbeafe;color:#1d4ed8;padding:3px 7px;border-radius:4px;cursor:pointer">Done</button>`:''}
+        </td>
+      </tr>`).join('')}
+    </table></div>`;
+  } catch(e) { content.innerHTML='Connection error.'; }
+}
+
+async function updateStatus(id, status) {
+  const fd = new FormData();
+  fd.append('appointment_id', id);
+  fd.append('status', status);
+  const r = await fetch(`${API}?action=update_appointment_status`, {method:'POST', body:fd});
+  const d = await r.json();
+  toast(d.message, d.success?'success':'error');
+  if (d.success) openDashboard();
+}
+
+async function payBill(id) {
+  const fd = new FormData(); fd.append('bill_id', id);
+  const r = await fetch(`${API}?action=pay_bill`, {method:'POST', body:fd});
+  const d = await r.json();
+  toast(d.message, d.success?'success':'error');
+  if (d.success) { const tabs=document.getElementById('dashTabs'); loadMyBilling(tabs.children[1]); }
+}
+
+// ══════════════════════════════════════════════════════════
+//  SCROLL
+// ══════════════════════════════════════════════════════════
+function scrollSection(btn, dir) {
+  const wrap = btn.closest('.scroll-wrap');
+  const el = wrap.querySelector('.hscroll');
+  if (el) el.scrollBy({ left: dir * 360, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+updateNavForUser();
+loadDoctors();
+loadSpecialties();
+loadStats();
+</script>
+</body>
+</html>

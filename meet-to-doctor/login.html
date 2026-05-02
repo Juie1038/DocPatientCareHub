@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Login – DocTime Patient Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f0f4ff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+
+/* Background design */
+body::before{content:'';position:fixed;top:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(26,92,255,.12),transparent 70%);pointer-events:none}
+body::after{content:'';position:fixed;bottom:-100px;right:-100px;width:350px;height:350px;background:radial-gradient(circle,rgba(99,179,237,.1),transparent 70%);pointer-events:none}
+
+.login-wrap{width:100%;max-width:420px;position:relative;z-index:1}
+
+/* Logo */
+.logo-area{text-align:center;margin-bottom:28px}
+.logo-icon{width:56px;height:56px;background:#1a5cff;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 8px 24px rgba(26,92,255,.3)}
+.logo-icon svg{width:30px;height:30px;fill:#fff}
+.logo-name{font-size:1.5rem;font-weight:800;color:#1a1d26}
+.logo-name span{color:#1a5cff}
+.logo-sub{font-size:0.82rem;color:#6b7280;margin-top:3px}
+
+/* Card */
+.login-card{background:#fff;border-radius:16px;padding:32px;box-shadow:0 8px 40px rgba(26,92,255,.1);border:1px solid #e8eaf0}
+
+/* Role selector */
+.role-label{font-size:0.78rem;font-weight:700;color:#374151;margin-bottom:8px;display:block;text-transform:uppercase;letter-spacing:.05em}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+.role-opt{
+  border:2px solid #e8eaf0;border-radius:10px;
+  padding:12px 6px;text-align:center;cursor:pointer;
+  transition:all .2s;background:#fafbff;
+}
+.role-opt:hover{border-color:#b8c8ff;background:#f0f4ff}
+.role-opt.sel{border-color:#1a5cff;background:#f0f4ff}
+.role-opt .ri{font-size:22px;margin-bottom:5px}
+.role-opt .rn{font-size:0.75rem;font-weight:600;color:#374151}
+.role-opt.sel .rn{color:#1a5cff}
+
+/* Form */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:0.78rem;font-weight:600;color:#374151;margin-bottom:6px}
+.input-wrap{position:relative}
+.input-wrap input{
+  width:100%;border:1.5px solid #d0d5e8;border-radius:9px;
+  padding:11px 14px;font-family:'Inter',sans-serif;
+  font-size:0.9rem;color:#1a1d26;outline:none;
+  transition:all .2s;background:#fff;
+}
+.input-wrap input:focus{border-color:#1a5cff;box-shadow:0 0 0 3px rgba(26,92,255,.1)}
+.input-wrap .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.input-wrap.has-icon input{padding-left:38px}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#9aa0b0;padding:2px}
+
+/* Login button */
+.login-btn{
+  width:100%;background:#1a5cff;color:#fff;border:none;
+  padding:13px;border-radius:10px;font-family:'Inter',sans-serif;
+  font-size:0.95rem;font-weight:700;cursor:pointer;
+  transition:all .2s;margin-top:6px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.login-btn:hover{background:#1248d6;box-shadow:0 4px 16px rgba(26,92,255,.3);transform:translateY(-1px)}
+.login-btn:disabled{background:#a5b4fc;cursor:not-allowed;transform:none}
+
+/* Error / success msg */
+.msg-box{
+  border-radius:8px;padding:10px 14px;
+  font-size:0.82rem;font-weight:500;
+  margin-top:12px;display:none;
+  display:flex;align-items:center;gap:8px;
+}
+.msg-box.err{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+.msg-box.ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.msg-box.hide{display:none!important}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0}
+.divider span{font-size:0.75rem;color:#9aa0b0;white-space:nowrap}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e8eaf0}
+
+/* Register link */
+.register-link{text-align:center;font-size:0.82rem;color:#6b7280;margin-top:16px}
+.register-link a{color:#1a5cff;font-weight:600;text-decoration:none}
+.register-link a:hover{text-decoration:underline}
+
+/* Default credentials hint */
+.hint-box{background:#f0f4ff;border:1px solid #b8c8ff;border-radius:9px;padding:12px 14px;margin-bottom:18px}
+.hint-box p{font-size:0.75rem;color:#374151;font-weight:600;margin-bottom:6px}
+.hint-row{display:flex;justify-content:space-between;font-size:0.72rem;color:#6b7280;margin-bottom:3px}
+.hint-row span:last-child{font-weight:600;color:#1a5cff;cursor:pointer}
+.hint-row span:last-child:hover{text-decoration:underline}
+
+/* Back link */
+.back-link{text-align:center;margin-top:18px}
+.back-link a{font-size:0.82rem;color:#6b7280;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.back-link a:hover{color:#1a5cff}
+
+/* Loading spinner */
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Register form - hidden by default */
+.reg-form{display:none}
+.reg-form.show{display:block}
+.login-form.hide{display:none}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1d26;color:#fff;padding:11px 18px;border-radius:8px;font-size:0.82rem;font-weight:500;z-index:9999;transition:all .3s;transform:translateY(70px);opacity:0;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#166534}
+#toast.error{background:#b91c1c}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="login-wrap">
+
+  <!-- Logo -->
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2c-4.418 0-8 3.582-8 8 0 3.54 2.29 6.543 5.5 7.6V20h5v-2.4C17.71 16.543 20 13.54 20 10c0-4.418-3.582-8-8-8zm-1 14v-2h2v2h-2zm1-4c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2z"/></svg>
+    </div>
+    <div class="logo-name">Doc<span>Time</span></div>
+    <div class="logo-sub">Meet to Doctor: Patient Care</div>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+
+    <!-- LOGIN FORM -->
+    <div class="login-form" id="loginForm">
+
+      <span class="role-label">Login As</span>
+      <div class="role-grid">
+        <div class="role-opt sel" onclick="selectRole(this,'patient')" id="rolePatient">
+          <div class="ri">🧑‍💼</div>
+          <div class="rn">Patient</div>
+        </div>
+        <div class="role-opt" onclick="selectRole(this,'doctor')" id="roleDoctor">
+          <div class="ri">👨‍⚕️</div>
+          <div class="rn">Doctor</div>
+        </div>
+        <div class="role-opt" onclick="selectRole(this,'admin')" id="roleAdmin">
+          <div class="ri">🔑</div>
+          <div class="rn">Admin</div>
+        </div>
+      </div>
+      <input type="hidden" id="selectedRole" value="patient"/>
+
+      <!-- Default credentials hint (shows for admin/doctor) -->
+      <div class="hint-box" id="hintBox" style="display:none">
+        <p>🔐 Default Credentials:</p>
+        <div class="hint-row"><span>Email</span><span id="hintEmail" onclick="fillHint()">Click to fill</span></div>
+        <div class="hint-row"><span>Password</span><span id="hintPass" onclick="fillHint()">Click to fill</span></div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-wrap has-icon">
+          <span class="icon">📧</span>
+          <input type="email" id="loginEmail" placeholder="your@email.com"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap has-icon">
+          <span class="icon">🔒</span>
+          <input type="password" id="loginPass" placeholder="••••••••" id="loginPass"/>
+          <button class="eye-btn" onclick="togglePass('loginPass',this)" type="button">👁️</button>
+        </div>
+      </div>
+
+      <button class="login-btn" onclick="doLogin()" id="loginBtn">
+        <span class="spinner" id="loginSpinner"></span>
+        <span id="loginBtnText">Login</span>
+      </button>
+
+      <div class="msg-box hide" id="loginMsg"></div>
+
+      <div class="divider"><span>Don't have an account?</span></div>
+
+      <div class="register-link">
+        <a href="#" onclick="showRegister()">Register as Patient →</a>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="reg-form" id="regForm">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <button onclick="showLogin()" style="background:#f0f4ff;border:none;border-radius:7px;padding:6px 10px;cursor:pointer;font-size:14px">← Back</button>
+        <h3 style="font-size:1rem;font-weight:700;color:#1a1d26">Create Patient Account</h3>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div class="input-wrap"><input type="text" id="regName" placeholder="Your full name"/></div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrap"><input type="email" id="regEmail" placeholder="your@email.com"/></div>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <div class="input-wrap"><input type="text" id="regPhone" placeholder="01XXXXXXXXX"/></div>
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <div class="input-wrap"><input type="number" id="regAge" placeholder="25"/></div>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="input-wrap">
+            <select id="regGender" style="width:100%;border:1.5px solid #d0d5e8;border-radius:9px;padding:11px 14px;font-family:'Inter',sans-serif;font-size:.9rem;color:#1a1d26;outline:none;background:#fff">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input type="password" id="regPass" placeholder="Min 6 characters"/>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <div class="input-wrap"><input type="text" id="regAddress" placeholder="Your full address"/></div>
+      </div>
+
+      <button class="login-btn" onclick="doRegister()" id="regBtn">
+        <span class="spinner" id="regSpinner"></span>
+        <span id="regBtnText">Create Account</span>
+      </button>
+      <div class="msg-box hide" id="regMsg"></div>
+    </div>
+
+  </div>
+
+  <!-- Back to home -->
+  <div class="back-link">
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+</div>
+
+<script>
+const API = window.location.pathname.replace('login.html','') + 'backend.php';
+
+// ── TOAST ──────────────────────────────────────────────────────
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'show ' + type;
+  setTimeout(() => el.className = '', 3000);
+}
+
+// ── TOGGLE PASSWORD VISIBILITY ──────────────────────────────────
+function togglePass(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁️'; }
+}
+
+// ── ROLE SELECT ─────────────────────────────────────────────────
+const hints = {
+  admin:  { email: 'admin@doctime.com',  pass: 'admin123'  },
+  doctor: { email: 'rahim@doctime.com',  pass: 'doctor123' },
+  patient:{ email: '',                   pass: ''           }
+};
+
+function selectRole(el, role) {
+  document.querySelectorAll('.role-opt').forEach(r => r.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('selectedRole').value = role;
+
+  const hintBox = document.getElementById('hintBox');
+  if (role === 'admin' || role === 'doctor') {
+    hintBox.style.display = 'block';
+    document.getElementById('hintEmail').textContent = hints[role].email + ' (click to fill)';
+    document.getElementById('hintPass').textContent  = hints[role].pass  + ' (click to fill)';
+  } else {
+    hintBox.style.display = 'none';
+  }
+}
+
+function fillHint() {
+  const role = document.getElementById('selectedRole').value;
+  document.getElementById('loginEmail').value = hints[role].email;
+  document.getElementById('loginPass').value  = hints[role].pass;
+  toast('Credentials filled! Click Login.', 'success');
+}
+
+// ── LOGIN ───────────────────────────────────────────────────────
+async function doLogin() {
+  const btn     = document.getElementById('loginBtn');
+  const spinner = document.getElementById('loginSpinner');
+  const btnTxt  = document.getElementById('loginBtnText');
+  const msg     = document.getElementById('loginMsg');
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const role  = document.getElementById('selectedRole').value;
+
+  if (!email || !pass) {
+    showMsg(msg, 'Please enter email and password.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnTxt.textContent = 'Logging in…';
+  msg.className = 'msg-box hide';
+
+  const fd = new FormData();
+  fd.append('email',    email);
+  fd.append('password', pass);
+  fd.append('role',     role);
+
+  try {
+    const r = await fetch(`${API}?action=login`, {
+      method: 'POST',
+      body: fd,
+      credentials: 'same-origin'
+    });
+    const text = await r.text();
+    let d;
+    try { d = JSON.parse(text); }
+    catch(e) { showMsg(msg, '⚠️ Server error: ' + text.substring(0,100), 'err'); btn.disabled=false; spinner.style.display='none'; btnTxt.textContent='Login'; return; }
+
+    if (d.success) {
+      localStorage.setItem('dtUser', JSON.stringify(d.user));
+      showMsg(msg, '✅ Login successful! Redirecting…', 'ok');
+      toast('Welcome, ' + d.user.name + '!', 'success');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    } else {
+      showMsg(msg, '❌ ' + d.message, 'err');
+      btn.disabled = false;
+    }
+  } catch(e) {
+    showMsg(msg, '⚠️ Cannot connect to server. Make sure XAMPP is running. Error: ' + e.message, 'err');
+    btn.disabled = false;
+  }
+
+  spinner.style.display = 'none';
+  btnTxt.textContent = 'Login';
+}
+
+// ── REGISTER ────────────────────────────────────────────────────
+async function doRegister() {
+  const btn     = document.getElementById('regBtn');
+  const spinner = document.getElementById('regSpinner');
+  const btnTxt  = document.getElementById('regBtnText');
+  const msg     = document.getElementById('regMsg');
+
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPass').value;
+
+  if (!name || !email || !pass) {
+    showMsg(msg, 'Name, email and password are required.', 'err');
+    return;
+  }
+  if (pass.length < 6) {
+    showMsg(msg, 'Password must be at least 6 characters.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnTxt.textContent = 'Creating…';
+  msg.className = 'msg-box hide';
+
+  const fd = new FormData();
+  fd.append('name',     name);
+  fd.append('email',    email);
+  fd.append('phone',    document.getElementById('regPhone').value);
+  fd.append('age',      document.getElementById('regAge').value);
+  fd.append('gender',   document.getElementById('regGender').value);
+  fd.append('password', pass);
+  fd.append('address',  document.getElementById('regAddress').value);
+
+  try {
+    const r = await fetch(`${API}?action=register_patient`, {
+      method: 'POST',
+      body: fd,
+      credentials: 'same-origin'
+    });
+    const text = await r.text();
+    let d;
+    try { d = JSON.parse(text); }
+    catch(e) { showMsg(msg, '⚠️ Server error: ' + text.substring(0,100), 'err'); btn.disabled=false; spinner.style.display='none'; btnTxt.textContent='Create Account'; return; }
+
+    if (d.success) {
+      showMsg(msg, '✅ ' + d.message, 'ok');
+      toast('Account created! Please login.', 'success');
+      setTimeout(() => showLogin(), 2000);
+    } else {
+      showMsg(msg, '❌ ' + d.message, 'err');
+    }
+  } catch(e) {
+    showMsg(msg, '⚠️ Cannot connect to server. Error: ' + e.message, 'err');
+  }
+
+  btn.disabled = false;
+  spinner.style.display = 'none';
+  btnTxt.textContent = 'Create Account';
+}
+
+// ── HELPERS ─────────────────────────────────────────────────────
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = 'msg-box ' + (type === 'ok' ? 'ok' : 'err');
+}
+
+function showRegister() {
+  document.getElementById('loginForm').classList.add('hide');
+  document.getElementById('regForm').classList.add('show');
+}
+
+function showLogin() {
+  document.getElementById('loginForm').classList.remove('hide');
+  document.getElementById('regForm').classList.remove('show');
+  document.getElementById('regMsg').className = 'msg-box hide';
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('regForm').classList.contains('show')) doRegister();
+    else doLogin();
+  }
+});
+
+// If already logged in, redirect
+const existingUser = JSON.parse(localStorage.getItem('dtUser') || 'null');
+if (existingUser) window.location.href = 'index.html';
+</script>
+</body>
+</html>

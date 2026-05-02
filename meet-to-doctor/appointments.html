@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Appointments – DocHub.Patient-care</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f7fa;color:#1a1d26;font-size:14px}
+nav{background:#fff;border-bottom:1px solid #e8eaf0;padding:0 24px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:200;gap:32px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;background:#1a5cff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:1.2rem;font-weight:700;color:#1a1d26}.logo-text span{color:#1a5cff}
+.logo-sub{font-size:9px;color:#888;display:block;margin-top:-2px;font-weight:400}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:#444;padding:6px 12px;border-radius:6px;transition:all .15s}
+.nav-links a:hover{background:#f0f4ff;color:#1a5cff}
+.nav-links a.active{color:#1a5cff;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn{background:#1a5cff;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer}
+.nav-btn-outline{background:#fff;color:#1a5cff;border:1.5px solid #1a5cff;padding:7px 16px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer}
+.user-chip{display:flex;align-items:center;gap:8px;background:#f0f4ff;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer}
+.user-avatar{width:28px;height:28px;background:#1a5cff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.75rem}
+.user-chip span{font-size:0.82rem;font-weight:600;color:#1a1d26}
+.page-wrap{max-width:1000px;margin:0 auto;padding:24px}
+.page-header{margin-bottom:24px}
+.page-header h1{font-size:1.5rem;font-weight:800;color:#1a1d26}
+.page-header p{font-size:0.88rem;color:#6b7280;margin-top:4px}
+.tab-row{display:flex;gap:4px;background:#fff;border:1px solid #e8eaf0;border-radius:10px;padding:4px;margin-bottom:24px;width:fit-content}
+.tab-btn{padding:8px 22px;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;background:none;color:#6b7280;transition:all .15s}
+.tab-btn.active{background:#1a5cff;color:#fff;box-shadow:0 2px 8px rgba(26,92,255,.25)}
+.card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;padding:20px;margin-bottom:16px;transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 16px rgba(26,92,255,.08)}
+.appt-row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+.appt-date{background:#f0f4ff;border-radius:10px;padding:12px 16px;text-align:center;min-width:60px}
+.appt-date .day{font-size:1.4rem;font-weight:800;color:#1a5cff;line-height:1}
+.appt-date .mon{font-size:0.72rem;font-weight:600;color:#6b7280;margin-top:2px}
+.appt-info h3{font-size:0.92rem;font-weight:700;color:#1a1d26;margin-bottom:4px}
+.appt-info p{font-size:0.78rem;color:#6b7280}
+.appt-info p span{margin-right:12px}
+.appt-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.pill{display:inline-block;font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:20px}
+.pill.pending{background:#fef9c3;color:#a16207}
+.pill.confirmed{background:#dcfce7;color:#166534}
+.pill.cancelled{background:#fee2e2;color:#b91c1c}
+.pill.completed{background:#dbeafe;color:#1d4ed8}
+.pill.paid{background:#dcfce7;color:#166534}
+.pill.unpaid{background:#fee2e2;color:#b91c1c}
+.action-btn{background:none;border:1.5px solid #e0e4ef;border-radius:6px;padding:5px 12px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all .15s;color:#6b7280}
+.action-btn:hover{border-color:#1a5cff;color:#1a5cff;background:#f0f4ff}
+.action-btn.red:hover{border-color:#b91c1c;color:#b91c1c;background:#fee2e2}
+.action-btn.green{background:#1a5cff;color:#fff;border-color:#1a5cff}
+.action-btn.green:hover{background:#1248d6}
+.empty{text-align:center;padding:60px 20px;color:#6b7280}
+.empty .icon{font-size:48px;margin-bottom:14px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid #e8eaf0;border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px}
+.stat-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stat-icon.blue{background:#dbeafe}.stat-icon.green{background:#dcfce7}.stat-icon.orange{background:#ffedd5}.stat-icon.purple{background:#ede9fe}
+.stat-val{font-size:1.3rem;font-weight:800;color:#1a1d26;line-height:1}
+.stat-label{font-size:0.7rem;color:#6b7280;margin-top:2px}
+.bill-card{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+.bill-icon{width:42px;height:42px;background:#f0f4ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.bill-info h3{font-size:0.88rem;font-weight:700;color:#1a1d26;margin-bottom:3px}
+.bill-info p{font-size:0.75rem;color:#6b7280}
+.bill-amount{font-size:1.1rem;font-weight:800;color:#1a5cff}
+footer{background:#1a5cff;padding:20px 24px;margin-top:32px;text-align:center;font-size:0.78rem;color:rgba(255,255,255,.7)}
+.login-prompt{background:#fff;border:2px dashed #b8c8ff;border-radius:12px;padding:40px;text-align:center}
+.login-prompt .icon{font-size:40px;margin-bottom:12px}
+.login-prompt h3{font-size:1rem;font-weight:700;margin-bottom:6px;color:#1a1d26}
+.login-prompt p{font-size:0.85rem;color:#6b7280;margin-bottom:16px}
+.login-btn{background:#1a5cff;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1d26;color:#fff;padding:12px 20px;border-radius:8px;font-size:.85rem;font-weight:500;z-index:9999;transition:all .3s;transform:translateY(80px);opacity:0;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#166534}
+#toast.error{background:#b91c1c}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏥</div><div><div class="logo-text">DocPatientCareHub</div><span class="logo-sub">Healthcare Anytime Anywhere</span></div></a>
+  <div class="nav-links">
+    <a href="index.html">Consultation</a>
+    <a href="doctors.html">Find Doctors</a>
+    <a href="appointments.html" class="active">Appointments</a>
+    <a href="billing.html">Billing</a>
+  </div>
+  <div class="nav-right" id="navRight"></div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>My Appointments</h1>
+    <p>Manage and track all your scheduled consultations</p>
+  </div>
+  <div id="mainContent">Loading…</div>
+</div>
+
+<footer>© 2026 DocPatientCareHub – Meet to Doctor: Patient Care. All rights reserved.</footer>
+
+<script>
+const API = 'backend.php';
+const currentUser = JSON.parse(localStorage.getItem('dtUser')||'null');
+
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='show '+type;
+  setTimeout(()=>el.className='',3000);
+}
+
+function updateNav(){
+  const nr=document.getElementById('navRight');
+  if(currentUser){
+    const initials=currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    nr.innerHTML=`<div class="user-chip"><div class="user-avatar">${initials}</div><span>${currentUser.name.split(' ')[0]}</span></div>
+      <button class="nav-btn-outline" onclick="doLogout()">Logout</button>`;
+  } else {
+    nr.innerHTML=`<button class="nav-btn-outline" onclick="location.href='index.html'">Log in</button>
+      <button class="nav-btn" onclick="location.href='index.html'">Register</button>`;
+  }
+}
+
+async function doLogout(){
+  await fetch(`${API}?action=logout`,{method:'POST'}).catch(()=>{});
+  localStorage.removeItem('dtUser');location.href='index.html';
+}
+
+async function init(){
+  const content=document.getElementById('mainContent');
+  if(!currentUser){
+    content.innerHTML=`<div class="login-prompt"><div class="icon">🔐</div>
+      <h3>Login to View Appointments</h3>
+      <p>You need to be logged in to view and manage your appointments.</p>
+      <button class="login-btn" onclick="location.href='index.html'">Go to Login</button></div>`;
+    return;
+  }
+
+  // Stats
+  try{
+    const r=await fetch(`${API}?action=get_appointments`);
+    const d=await r.json();
+    const appts=d.data||[];
+    const pending=appts.filter(a=>a.status==='pending').length;
+    const confirmed=appts.filter(a=>a.status==='confirmed').length;
+    const completed=appts.filter(a=>a.status==='completed').length;
+    const cancelled=appts.filter(a=>a.status==='cancelled').length;
+
+    content.innerHTML=`
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-icon orange">⏳</div><div><div class="stat-val">${pending}</div><div class="stat-label">Pending</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-val">${confirmed}</div><div class="stat-label">Confirmed</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue">🏁</div><div><div class="stat-val">${completed}</div><div class="stat-label">Completed</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple">📋</div><div><div class="stat-val">${appts.length}</div><div class="stat-label">Total</div></div></div>
+      </div>
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="filterAppts('all',this)">All</button>
+        <button class="tab-btn" onclick="filterAppts('pending',this)">Pending</button>
+        <button class="tab-btn" onclick="filterAppts('confirmed',this)">Confirmed</button>
+        <button class="tab-btn" onclick="filterAppts('completed',this)">Completed</button>
+        <button class="tab-btn" onclick="filterAppts('cancelled',this)">Cancelled</button>
+      </div>
+      <div id="apptList"></div>`;
+
+    window._appts = appts;
+    filterAppts('all', document.querySelector('.tab-btn.active'));
+  } catch(e){
+    content.innerHTML='<div class="empty"><div class="icon">⚠️</div><p>Could not connect to backend.</p></div>';
+  }
+}
+
+function filterAppts(status, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.className='tab-btn');
+  btn.className='tab-btn active';
+  const filtered=status==='all'?window._appts:window._appts.filter(a=>a.status===status);
+  const list=document.getElementById('apptList');
+  if(!filtered.length){list.innerHTML='<div class="empty"><div class="icon">📅</div><p>No appointments in this category.</p><a href="doctors.html" style="color:#1a5cff;font-weight:600;text-decoration:none">Book a new appointment →</a></div>';return;}
+  list.innerHTML=filtered.map(a=>{
+    const d=new Date(a.date);
+    const day=d.getDate();
+    const mon=d.toLocaleString('default',{month:'short'}).toUpperCase();
+    const actions=[];
+    if(a.status==='pending'||a.status==='confirmed') actions.push(`<button class="action-btn red" onclick="updateStatus(${a.appointment_id},'cancelled')">Cancel</button>`);
+    if(currentUser.role==='doctor'&&a.status==='confirmed') actions.push(`<button class="action-btn green" onclick="updateStatus(${a.appointment_id},'completed')">Mark Done</button>`);
+    if(currentUser.role==='admin'){
+      if(a.status==='pending') actions.push(`<button class="action-btn green" onclick="updateStatus(${a.appointment_id},'confirmed')">Confirm</button>`);
+    }
+    return `<div class="card">
+      <div class="appt-row">
+        <div class="appt-date"><div class="day">${day}</div><div class="mon">${mon}</div></div>
+        <div class="appt-info">
+          <h3>${currentUser.role==='patient'?'Dr. '+a.doctor_name:a.patient_name}</h3>
+          <p><span>⏰ ${a.time.slice(0,5)}</span><span>🏥 ${a.department_name}</span>${currentUser.role==='patient'?'<span>💊 '+a.specialization+'</span>':''}</p>
+          ${a.notes?`<p style="margin-top:4px;font-style:italic;color:#9aa0b0">📝 ${a.notes}</p>`:''}
+        </div>
+        <div class="appt-actions"><span class="pill ${a.status}">${a.status}</span>${actions.join('')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function updateStatus(id,status){
+  if(!confirm(`${status==='cancelled'?'Cancel this appointment?':'Update status to '+status+'?'}`)) return;
+  const fd=new FormData();fd.append('appointment_id',id);fd.append('status',status);
+  const r=await fetch(`${API}?action=update_appointment_status`,{method:'POST',body:fd});
+  const d=await r.json();
+  toast(d.message,d.success?'success':'error');
+  if(d.success) init();
+}
+
+updateNav();
+init();
+</script>
+</body>
+</html>

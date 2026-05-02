@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Find Doctors – DocPatientCareHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f7fa;color:#1a1d26;font-size:14px}
+nav{background:#fff;border-bottom:1px solid #e8eaf0;padding:0 24px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:200;gap:32px}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;background:#1a5cff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-size:1.2rem;font-weight:700;color:#1a1d26}.logo-text span{color:#1a5cff}
+.logo-sub{font-size:9px;color:#888;display:block;margin-top:-2px;font-weight:400}
+.nav-links{display:flex;align-items:center;gap:4px;flex:1}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:#444;padding:6px 12px;border-radius:6px;transition:all .15s}
+.nav-links a:hover{background:#f0f4ff;color:#1a5cff}
+.nav-links a.active{color:#1a5cff;font-weight:600}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn{background:#1a5cff;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer}
+.nav-btn-outline{background:#fff;color:#1a5cff;border:1.5px solid #1a5cff;padding:7px 16px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.875rem;font-weight:600;cursor:pointer}
+.user-chip{display:flex;align-items:center;gap:8px;background:#f0f4ff;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer}
+.user-avatar{width:28px;height:28px;background:#1a5cff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.75rem}
+.user-chip span{font-size:0.82rem;font-weight:600;color:#1a1d26}
+.page-wrap{max-width:1100px;margin:0 auto;padding:24px}
+.page-header{margin-bottom:20px}
+.page-header h1{font-size:1.5rem;font-weight:800;color:#1a1d26}
+.page-header p{font-size:0.88rem;color:#6b7280;margin-top:4px}
+.filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.filter-bar input,.filter-bar select{border:1.5px solid #d0d5e8;border-radius:8px;padding:9px 14px;font-family:'Inter',sans-serif;font-size:0.88rem;color:#1a1d26;outline:none;background:#fff}
+.filter-bar input:focus,.filter-bar select:focus{border-color:#1a5cff;box-shadow:0 0 0 3px rgba(26,92,255,.09)}
+.filter-bar input{flex:1;min-width:200px}
+.search-btn{background:#1a5cff;color:#fff;border:none;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer}
+.results-meta{font-size:0.82rem;color:#6b7280;margin-bottom:14px}
+.doctors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.doc-card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;overflow:hidden;cursor:pointer;transition:all .2s}
+.doc-card:hover{box-shadow:0 6px 20px rgba(26,92,255,.13);border-color:#b8c8ff;transform:translateY(-2px)}
+.doc-img{width:100%;height:120px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8f0fe,#dde8ff);font-size:52px;position:relative}
+.dot{position:absolute;top:10px;right:10px;width:10px;height:10px;border-radius:50%;border:2px solid #fff;background:#22c55e}
+.doc-body{padding:12px}
+.doc-name{font-size:0.85rem;font-weight:700;color:#1a1d26;margin-bottom:2px}
+.doc-cred{font-size:0.72rem;color:#6b7280;margin-bottom:8px}
+.badge{display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 9px;border-radius:4px;margin-bottom:8px}
+.badge.blue{background:#dbeafe;color:#1d4ed8}.badge.green{background:#dcfce7;color:#166534}
+.badge.pink{background:#fce7f3;color:#9d174d}.badge.orange{background:#ffedd5;color:#c2410c}
+.doc-fee{font-size:0.95rem;font-weight:800;color:#1a5cff;margin-bottom:10px}
+.book-btn{width:100%;background:#1a5cff;color:#fff;border:none;border-radius:8px;padding:9px;font-family:'Inter',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;transition:background .15s}
+.book-btn:hover{background:#1248d6}
+.empty{text-align:center;padding:60px 20px;color:#6b7280}
+.empty .icon{font-size:48px;margin-bottom:12px}
+footer{background:#1a5cff;padding:20px 24px;margin-top:32px;text-align:center;font-size:0.78rem;color:rgba(255,255,255,.7)}
+
+/* MODAL STYLES */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:18px 20px 14px;border-bottom:1px solid #f0f2f8;display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:1rem;font-weight:700;color:#1a1d26}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#9aa0b0;padding:2px 6px;border-radius:4px}
+.modal-body{padding:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:0.78rem;font-weight:600;color:#374151;margin-bottom:5px}
+.form-group input{width:100%;border:1.5px solid #d0d5e8;border-radius:7px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:0.88rem;color:#1a1d26;outline:none;transition:border-color .2s}
+.form-group input:focus{border-color:#1a5cff;box-shadow:0 0 0 3px rgba(26,92,255,.09)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.submit-btn{width:100%;background:#1a5cff;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer}
+.submit-btn:hover{background:#1248d6}
+.msg{font-size:0.8rem;padding:8px 12px;border-radius:6px;margin-top:10px;display:none}
+.msg.success{background:#dcfce7;color:#166534;display:block}
+.msg.error{background:#fee2e2;color:#b91c1c;display:block}
+.doc-profile-header{display:flex;align-items:center;gap:14px;padding:14px;background:#f0f4ff;border-radius:10px;margin-bottom:16px}
+.doc-profile-avatar{width:50px;height:50px;background:#1a5cff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.doc-profile-info h4{font-size:0.9rem;font-weight:700;color:#1a1d26}
+.doc-profile-info p{font-size:0.76rem;color:#6b7280;margin-top:2px}
+.day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.day-pill{padding:6px 4px;border:1.5px solid #e0e4ef;border-radius:7px;text-align:center;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all .15s;color:#6b7280}
+.day-pill.avail{border-color:#bbf7d0;color:#166534;background:#f0fdf4}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1d26;color:#fff;padding:12px 20px;border-radius:8px;font-size:0.85rem;font-weight:500;z-index:9999;transition:all .3s;transform:translateY(80px);opacity:0;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#166534}
+#toast.error{background:#b91c1c}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<nav>
+  <a href="index.html" class="logo"><div class="logo-icon">🏥</div><div><div class="logo-text">DocPatientCareHub</div><span class="logo-sub">Healthcare Anytime Anywhere</span></div></a>
+  <div class="nav-links">
+    <a href="index.html">Consultation</a>
+    <a href="doctors.html" class="active">Find Doctors</a>
+    <a href="appointments.html">Appointments</a>
+    <a href="billing.html">Billing</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <button class="nav-btn-outline" onclick="location.href='index.html'">Log in</button>
+    <button class="nav-btn" onclick="location.href='index.html'">Register</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Find a Doctor</h1>
+    <p>Search from our verified specialists across all departments</p>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="🔍 Search by name or specialization…" oninput="filterDoctors()"/>
+    <select id="deptFilter" onchange="filterDoctors()">
+      <option value="">All Departments</option>
+    </select>
+    <button class="search-btn" onclick="filterDoctors()">Search</button>
+  </div>
+
+  <div class="results-meta" id="resultsMeta">Loading…</div>
+  <div class="doctors-grid" id="doctorsGrid">
+    <!-- JS populated -->
+  </div>
+</div>
+
+<footer>© 2026 DocPatientCareHub – Meet to Doctor: Patient Care. All rights reserved.</footer>
+
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Book Appointment</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="doc-profile-header">
+        <div class="doc-profile-avatar" id="bookDocEmoji">👨‍⚕️</div>
+        <div class="doc-profile-info">
+          <h4 id="bookDocName"></h4>
+          <p id="bookDocSpec"></p>
+          <p id="bookDocFee" style="font-weight:700;color:#1a5cff;margin-top:4px"></p>
+        </div>
+      </div>
+      <div class="form-group"><label>Available Days</label><div class="day-grid" id="availDays"></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Date</label><input type="date" id="bookDate"/></div>
+        <div class="form-group"><label>Time</label><input type="time" id="bookTime" value="10:00"/></div>
+      </div>
+      <div class="form-group"><label>Notes (optional)</label><input type="text" id="bookNotes" placeholder="Symptoms…"/></div>
+      <button class="submit-btn" onclick="doBook()" id="bookBtn">Confirm Booking</button>
+      <div class="msg" id="bookMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'backend.php';
+let allDoctors = [];
+let bookingDoc = null;
+const docEmojis = {'Cardiology':'❤️','Neurology':'🧠','Orthopedics':'🦴','Dermatology':'🔬','Pediatrics':'👶','Gynecology':'🌸','ENT':'👂','General Medicine':'🩺'};
+const badgeColors = ['blue','green','pink','orange'];
+const currentUser = JSON.parse(localStorage.getItem('dtUser')||'null');
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className='show '+type;
+  setTimeout(()=>el.className='',3000);
+}
+
+// Update nav
+function updateNav() {
+  const nr = document.getElementById('navRight');
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    nr.innerHTML=`<div class="user-chip" onclick="location.href='index.html'"><div class="user-avatar">${initials}</div><span>${currentUser.name.split(' ')[0]}</span></div>
+      <button class="nav-btn-outline" onclick="doLogout()">Logout</button>`;
+  }
+}
+async function doLogout(){await fetch(`${API}?action=logout`,{method:'POST'}).catch(()=>{});localStorage.removeItem('dtUser');location.href='index.html';}
+
+async function loadData() {
+  try {
+    const [docRes, deptRes] = await Promise.all([
+      fetch(`${API}?action=get_doctors`),
+      fetch(`${API}?action=get_departments`)
+    ]);
+    const doctors = await docRes.json();
+    const depts   = await deptRes.json();
+    allDoctors = doctors.data || [];
+
+    // Populate dept filter
+    const sel = document.getElementById('deptFilter');
+    (depts.data||[]).forEach(d => sel.innerHTML += `<option value="${d.department_id}">${d.department_name}</option>`);
+
+    // Check URL params
+    const params = new URLSearchParams(location.search);
+    if (params.get('dept')) sel.value = params.get('dept');
+    if (params.get('search')) document.getElementById('searchInput').value = params.get('search');
+
+    renderDoctors(allDoctors);
+    filterDoctors();
+  } catch(e) {
+    document.getElementById('doctorsGrid').innerHTML = `<div class="empty"><div class="icon">⚠️</div><p>Could not connect to backend. Make sure PHP is running and run <a href="backend.php?action=setup">setup</a>.</p></div>`;
+    document.getElementById('resultsMeta').textContent = '';
+  }
+}
+
+function filterDoctors() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const dept   = document.getElementById('deptFilter').value;
+  let filtered = allDoctors.filter(d => {
+    const matchSearch = !search || d.name.toLowerCase().includes(search) || (d.specialization||'').toLowerCase().includes(search);
+    const matchDept   = !dept || String(d.department_id) === dept;
+    return matchSearch && matchDept;
+  });
+  document.getElementById('resultsMeta').textContent = `Showing ${filtered.length} doctor${filtered.length!==1?'s':''} ${dept?'in selected department':''}`;
+  renderDoctors(filtered);
+}
+
+function renderDoctors(doctors) {
+  const grid = document.getElementById('doctorsGrid');
+  if (!doctors.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="icon">🔍</div><p>No doctors found for your search.</p></div>`;
+    return;
+  }
+  grid.innerHTML = doctors.map((doc,i) => `
+    <div class="doc-card" onclick="openBook(${i})">
+      <div class="doc-img">${docEmojis[doc.department_name]||'👨‍⚕️'}<div class="dot"></div></div>
+      <div class="doc-body">
+        <div class="doc-name">Dr. ${doc.name}</div>
+        <div class="doc-cred">${doc.specialization||doc.department_name}</div>
+        <span class="badge ${badgeColors[parseInt(doc.department_id)%4]}">${doc.department_name}</span>
+        <div class="doc-fee">৳${parseFloat(doc.fee).toLocaleString()}</div>
+        <button class="book-btn" onclick="event.stopPropagation();openBook(${i})">Book Appointment</button>
+      </div>
+    </div>`).join('');
+  // Store filtered for indexing
+  window._displayed = doctors;
+}
+
+async function openBook(idx) {
+  if (!currentUser) { toast('Please login to book an appointment.','error'); setTimeout(()=>location.href='index.html',1200); return; }
+  if (currentUser.role!=='patient') { toast('Only patients can book appointments.','error'); return; }
+  const doc = window._displayed[idx];
+  bookingDoc = doc;
+  document.getElementById('bookDocEmoji').textContent = docEmojis[doc.department_name]||'👨‍⚕️';
+  document.getElementById('bookDocName').textContent  = 'Dr. '+doc.name;
+  document.getElementById('bookDocSpec').textContent  = (doc.specialization||'')+' · '+doc.department_name;
+  document.getElementById('bookDocFee').textContent   = '৳'+parseFloat(doc.fee).toLocaleString()+' consultation fee';
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bookDate').min=today; document.getElementById('bookDate').value=today;
+  document.getElementById('bookMsg').className='msg';
+
+  const dayGrid = document.getElementById('availDays');
+  dayGrid.innerHTML='<div style="color:#6b7280;font-size:.78rem;">Loading availability…</div>';
+  try {
+    const r = await fetch(`${API}?action=get_doctor_availability&doctor_id=${doc.doctor_id}`);
+    const av = await r.json();
+    dayGrid.innerHTML = av.data && av.data.length
+      ? av.data.map(a=>`<div class="day-pill avail" title="${a.start_time}–${a.end_time}">${a.day_of_week.slice(0,3)}<br><small>${a.start_time.slice(0,5)}</small></div>`).join('')
+      : '<div style="color:#6b7280;font-size:.78rem;grid-column:1/-1">No scheduled slots — book manually below.</div>';
+  } catch(e) { dayGrid.innerHTML=''; }
+
+  document.getElementById('bookModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('bookModal').classList.remove('open'); }
+window.addEventListener('click', e => { if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('open'); });
+
+async function doBook() {
+  const btn=document.getElementById('bookBtn'), msg=document.getElementById('bookMsg');
+  btn.disabled=true; btn.textContent='Booking…';
+  const fd=new FormData();
+  fd.append('doctor_id',bookingDoc.doctor_id);
+  fd.append('date',document.getElementById('bookDate').value);
+  fd.append('time',document.getElementById('bookTime').value);
+  fd.append('notes',document.getElementById('bookNotes').value);
+  try {
+    const r=await fetch(`${API}?action=book_appointment`,{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.success){
+      msg.textContent='✅ '+d.message; msg.className='msg success';
+      toast('Appointment booked!','success');
+      setTimeout(()=>closeModal(),2000);
+    } else { msg.textContent=d.message; msg.className='msg error'; }
+  } catch(e){ msg.textContent='Connection error.'; msg.className='msg error'; }
+  btn.disabled=false; btn.textContent='Confirm Booking';
+}
+
+updateNav();
+loadData();
+</script>
+</body>
+</html>

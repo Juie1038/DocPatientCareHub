@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Time – DocPatientCareHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #2563eb;
+      --blue-lt: #eff6ff;
+      --blue-dk: #1d4ed8;
+      --green:   #16a34a;
+      --green-lt:#f0fdf4;
+      --gray-50: #f8fafc;
+      --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0;
+      --gray-400:#94a3b8;
+      --gray-600:#475569;
+      --gray-800:#1e293b;
+      --white:   #ffffff;
+      --shadow:  0 4px 24px rgba(37,99,235,.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
+    .nav-brand .dot {
+      width: 36px; height: 36px; background: var(--blue);
+      border-radius: 10px; display: grid; place-items: center;
+    }
+    .nav-brand .dot svg { width: 20px; height: 20px; fill: #fff; }
+    .nav-brand span { font-family: 'Syne', sans-serif; font-size: 1.1rem; color: var(--gray-800); }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: .9rem; font-weight: 500;
+      color: var(--gray-600); transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: .8rem; }
+    .btn-outline {
+      border: 1.5px solid var(--gray-200); background: transparent;
+      padding: .45rem 1.1rem; border-radius: 8px; font-size: .88rem;
+      font-weight: 500; cursor: pointer; color: var(--gray-800);
+      transition: border-color .2s, background .2s;
+      text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-primary {
+      background: var(--blue); color: #fff; border: none;
+      padding: .45rem 1.1rem; border-radius: 8px; font-size: .88rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .btn-primary:hover { background: var(--blue-dk); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue) 0%, #1e40af 100%);
+      color: #fff; padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: 2.2rem; margin-bottom: .5rem; }
+    .hero p { opacity: .85; font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+    /* ── MAIN ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+    /* ── SEARCH CARD ── */
+    .search-card {
+      background: var(--white); border-radius: 16px;
+      box-shadow: var(--shadow); padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .search-card h2 {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem;
+      margin-bottom: 1.4rem; color: var(--gray-800);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 1rem;
+      align-items: end;
+    }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group label { font-size: .82rem; font-weight: 600; color: var(--gray-600); letter-spacing: .03em; text-transform: uppercase; }
+    .form-group select,
+    .form-group input[type="time"] {
+      border: 1.5px solid var(--gray-200); border-radius: 10px;
+      padding: .65rem .9rem; font-size: .95rem; font-family: inherit;
+      color: var(--gray-800); background: var(--white);
+      outline: none; transition: border-color .2s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .form-group select:focus,
+    .form-group input[type="time"]:focus { border-color: var(--blue); }
+
+    .search-btn {
+      background: var(--blue); color: #fff; border: none;
+      padding: .7rem 1.8rem; border-radius: 10px; font-size: .95rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      font-family: inherit; white-space: nowrap;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .search-btn:hover { background: var(--blue-dk); }
+    .search-btn:disabled { background: var(--gray-400); cursor: not-allowed; }
+
+    /* ── STATUS ── */
+    #status-msg {
+      text-align: center; padding: 3rem 1rem;
+      color: var(--gray-400); font-size: .95rem; display: none;
+    }
+    #status-msg.show { display: block; }
+
+    /* ── RESULTS ── */
+    #results-section { display: none; }
+    #results-section.show { display: block; }
+
+    .results-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.2rem;
+    }
+    .results-header h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; }
+    .badge {
+      background: var(--blue-lt); color: var(--blue);
+      font-size: .8rem; font-weight: 700; padding: .25rem .7rem;
+      border-radius: 99px;
+    }
+
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .doctor-card {
+      background: var(--white); border-radius: 14px;
+      border: 1.5px solid var(--gray-200);
+      padding: 1.4rem; transition: border-color .2s, box-shadow .2s;
+      animation: fadeUp .35s ease both;
+    }
+    .doctor-card:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .doctor-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .doctor-avatar {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--blue-lt); display: grid; place-items: center;
+      font-family: 'Syne', sans-serif; font-size: 1.3rem; color: var(--blue);
+      font-weight: 800; flex-shrink: 0;
+    }
+    .doctor-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: .15rem; }
+    .doctor-info .dept-tag {
+      font-size: .78rem; font-weight: 600; color: var(--blue);
+      background: var(--blue-lt); padding: .18rem .6rem; border-radius: 6px;
+      display: inline-block;
+    }
+    .doctor-spec { font-size: .85rem; color: var(--gray-600); margin-bottom: .8rem; }
+
+    .doctor-slots { margin-bottom: 1rem; }
+    .doctor-slots .slot-label {
+      font-size: .78rem; font-weight: 600; color: var(--gray-600);
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: .5rem;
+    }
+    .slots-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .slot-chip {
+      background: var(--green-lt); color: var(--green);
+      border: 1px solid #bbf7d0; font-size: .8rem; font-weight: 600;
+      padding: .2rem .55rem; border-radius: 6px;
+    }
+    .slot-chip.more {
+      background: var(--gray-100); color: var(--gray-600);
+      border-color: var(--gray-200);
+    }
+
+    .doctor-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--gray-100); padding-top: .9rem;
+    }
+    .work-hours { font-size: .82rem; color: var(--gray-600); }
+    .work-hours strong { color: var(--gray-800); }
+    .book-btn {
+      background: var(--blue); color: #fff; border: none;
+      padding: .4rem 1rem; border-radius: 8px; font-size: .82rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      font-family: inherit;
+    }
+    .book-btn:hover { background: var(--blue-dk); }
+
+    /* ── EMPTY ── */
+    .empty-state {
+      text-align: center; padding: 3.5rem 1rem;
+      background: var(--white); border-radius: 14px;
+      border: 1.5px dashed var(--gray-200);
+    }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: .8rem; }
+    .empty-state h4 { font-size: 1rem; margin-bottom: .3rem; }
+    .empty-state p { font-size: .88rem; color: var(--gray-400); }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--gray-200);
+      border-top-color: var(--blue); border-radius: 50%;
+      animation: spin .7s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .search-btn { grid-column: span 2; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .search-btn { grid-column: span 1; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="dot">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <span>DocPatientCareHub</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Consultation</a></li>
+    <li><a href="doctors.html">Find Doctors</a></li>
+    <li><a href="my-time.html" class="active">My Time</a></li>
+    <li><a href="appointments.html">Appointments</a></li>
+    <li><a href="billing.html">Billing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-outline" href="login.html">Log in</a>
+    <a class="btn-primary" href="login.html">Register</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🕐 My Time</h1>
+  <p>Enter your free time and instantly see which doctors are available — with their working hours and open slots.</p>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- SEARCH CARD -->
+  <div class="search-card">
+    <h2>Find doctors available at your time</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Day</label>
+        <select id="day-select">
+          <option value="">— Select Day —</option>
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
+          <option>Thursday</option>
+          <option>Friday</option>
+          <option>Saturday</option>
+          <option>Sunday</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>From</label>
+        <input type="time" id="time-from" value="09:00"/>
+      </div>
+      <div class="form-group">
+        <label>To</label>
+        <input type="time" id="time-to" value="17:00"/>
+      </div>
+      <button class="search-btn" id="search-btn" onclick="searchDoctors()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        Search
+      </button>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div id="status-msg"></div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div class="results-header">
+      <h3 id="results-title">Available Doctors</h3>
+      <span class="badge" id="results-count">0 found</span>
+    </div>
+    <div class="doctors-grid" id="doctors-grid"></div>
+  </div>
+
+</main>
+
+<script>
+  const BACKEND = 'backend.php';
+
+  async function searchDoctors() {
+    const day      = document.getElementById('day-select').value;
+    const timeFrom = document.getElementById('time-from').value;
+    const timeTo   = document.getElementById('time-to').value;
+
+    // Validation
+    if (!day) { alert('Please select a day.'); return; }
+    if (!timeFrom || !timeTo) { alert('Please enter your free time range.'); return; }
+    if (timeFrom >= timeTo) { alert('Start time must be before end time.'); return; }
+
+    const btn = document.getElementById('search-btn');
+    btn.disabled = true;
+    btn.textContent = 'Searching…';
+
+    showStatus('<div class="spinner"></div><p>Looking for available doctors…</p>');
+    hideResults();
+
+    try {
+      // Step 1: Get all active doctors
+      const res  = await fetch(`${BACKEND}?action=get_doctors`);
+      const data = await res.json();
+
+      if (!data.success || !data.data.length) {
+        showStatus('<p>No doctors found in the system.</p>');
+        return;
+      }
+
+      const doctors = data.data;
+
+      // Step 2: For each doctor check availability on the selected day + time range
+      const available = [];
+
+      await Promise.all(doctors.map(async (doc) => {
+        try {
+          const r = await fetch(`${BACKEND}?action=get_doctor_availability&doctor_id=${doc.doctor_id}`);
+          const d = await r.json();
+          if (!d.success) return;
+
+          // Find if this doctor works on the selected day
+          const slot = d.data.find(s => s.day_of_week === day);
+          if (!slot) return;
+
+          // Check overlap: doctor's hours must overlap with user's free time
+          const docStart = slot.start_time.substring(0,5); // "09:00"
+          const docEnd   = slot.end_time.substring(0,5);
+
+          const overlap = docStart < timeTo && docEnd > timeFrom;
+          if (!overlap) return;
+
+          // Calculate the overlapping window
+          const overlapStart = timeFrom > docStart ? timeFrom : docStart;
+          const overlapEnd   = timeTo < docEnd ? timeTo : docEnd;
+
+          // Generate 30-min slots within overlap
+          const freeSlots = generateSlots(overlapStart, overlapEnd);
+
+          available.push({
+            ...doc,
+            day_of_week: slot.day_of_week,
+            work_start: docStart,
+            work_end: docEnd,
+            free_slots: freeSlots
+          });
+        } catch (e) { /* skip this doctor */ }
+      }));
+
+      hideStatus();
+
+      if (!available.length) {
+        showStatus(`
+          <div class="empty-state">
+            <div class="empty-icon">😔</div>
+            <h4>No doctors available</h4>
+            <p>No doctors are available on <strong>${day}</strong> between <strong>${formatTime(timeFrom)}</strong> and <strong>${formatTime(timeTo)}</strong>.<br>Try a different time or day.</p>
+          </div>
+        `);
+        return;
+      }
+
+      renderDoctors(available, day, timeFrom, timeTo);
+
+    } catch (err) {
+      showStatus('<p>⚠️ Could not connect to server. Make sure XAMPP is running.</p>');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search`;
+    }
+  }
+
+  function generateSlots(start, end) {
+    const slots = [];
+    let cur = toMinutes(start);
+    const endMin = toMinutes(end);
+    while (cur < endMin) {
+      slots.push(fromMinutes(cur));
+      cur += 30;
+    }
+    return slots;
+  }
+
+  function toMinutes(t) {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  function fromMinutes(m) {
+    const h = Math.floor(m / 60).toString().padStart(2,'0');
+    const min = (m % 60).toString().padStart(2,'0');
+    return `${h}:${min}`;
+  }
+
+  function formatTime(t) {
+    const [h, m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hh = h % 12 || 12;
+    return `${hh}:${m.toString().padStart(2,'0')} ${ampm}`;
+  }
+
+  function getInitials(name) {
+    return name.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+  }
+
+  function renderDoctors(list, day, from, to) {
+    document.getElementById('results-title').textContent =
+      `Doctors available on ${day} (${formatTime(from)} – ${formatTime(to)})`;
+    document.getElementById('results-count').textContent =
+      `${list.length} found`;
+
+    const grid = document.getElementById('doctors-grid');
+    grid.innerHTML = '';
+
+    list.forEach((doc, i) => {
+      const slots     = doc.free_slots;
+      const showSlots = slots.slice(0, 5);
+      const extra     = slots.length - showSlots.length;
+
+      const slotChips = showSlots.map(s =>
+        `<span class="slot-chip">${formatTime(s)}</span>`
+      ).join('');
+      const moreChip = extra > 0
+        ? `<span class="slot-chip more">+${extra} more</span>` : '';
+
+      const card = document.createElement('div');
+      card.className = 'doctor-card';
+      card.style.animationDelay = `${i * 0.06}s`;
+      card.innerHTML = `
+        <div class="doctor-top">
+          <div class="doctor-avatar">${getInitials(doc.name)}</div>
+          <div class="doctor-info">
+            <h4>${doc.name}</h4>
+            <span class="dept-tag">${doc.department_name}</span>
+          </div>
+        </div>
+        ${doc.specialization ? `<p class="doctor-spec">🩺 ${doc.specialization}</p>` : ''}
+        <div class="doctor-slots">
+          <div class="slot-label">Available slots</div>
+          <div class="slots-list">${slotChips}${moreChip}</div>
+        </div>
+        <div class="doctor-footer">
+          <div class="work-hours">
+            Works: <strong>${formatTime(doc.work_start)}</strong> – <strong>${formatTime(doc.work_end)}</strong>
+          </div>
+          <button class="book-btn" onclick="bookDoctor(${doc.doctor_id}, '${doc.name}')">Book →</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    showResults();
+  }
+
+  function bookDoctor(id, name) {
+    // Redirect to appointments page with doctor pre-selected
+    window.location.href = `appointments.html?doctor_id=${id}&doctor_name=${encodeURIComponent(name)}`;
+  }
+
+  function showStatus(html) {
+    const el = document.getElementById('status-msg');
+    el.innerHTML = html;
+    el.classList.add('show');
+  }
+  function hideStatus() {
+    document.getElementById('status-msg').classList.remove('show');
+  }
+  function showResults() {
+    document.getElementById('results-section').classList.add('show');
+  }
+  function hideResults() {
+    document.getElementById('results-section').classList.remove('show');
+  }
+
+  // Auto-set today's day
+  window.addEventListener('DOMContentLoaded', () => {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const today = days[new Date().getDay()];
+    const sel = document.getElementById('day-select');
+    for (let opt of sel.options) {
+      if (opt.value === today) { opt.selected = true; break; }
+    }
+  });
+</script>
+</body>
+</html>

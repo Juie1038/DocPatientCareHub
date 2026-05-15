@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Symptom Checker – DocPatientCareHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #2563eb;
+      --blue-lt: #eff6ff;
+      --blue-dk: #1d4ed8;
+      --green:   #1a5cff;
+      --green-lt:#eff6ff;
+      --red:     #dc2626;
+      --red-lt:  #fef2f2;
+      --gray-50: #f8fafc;
+      --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0;
+      --gray-400:#94a3b8;
+      --gray-600:#475569;
+      --gray-800:#1e293b;
+      --white:   #ffffff;
+      --shadow:  0 4px 24px rgba(37,99,235,.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
+    .nav-brand .dot {
+      width: 36px; height: 36px; background: var(--blue);
+      border-radius: 10px; display: grid; place-items: center;
+    }
+    .nav-brand .dot svg { width: 20px; height: 20px; fill: #fff; }
+    .nav-brand span { font-family: 'Syne', sans-serif; font-size: 1.1rem; color: var(--gray-800); }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: .9rem; font-weight: 500;
+      color: var(--gray-600); transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+    .nav-actions { display: flex; gap: .8rem; }
+    .btn-outline {
+      border: 1.5px solid var(--gray-200); background: transparent;
+      padding: .45rem 1.1rem; border-radius: 8px; font-size: .88rem;
+      font-weight: 500; cursor: pointer; color: var(--gray-800);
+      transition: border-color .2s; text-decoration: none;
+      display: inline-flex; align-items: center;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-primary {
+      background: var(--blue); color: #fff; border: none;
+      padding: .45rem 1.1rem; border-radius: 8px; font-size: .88rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      text-decoration: none; display: inline-flex; align-items: center;
+    }
+    .btn-primary:hover { background: var(--blue-dk); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1a5cff 0%, #1248d6 100%);
+      color: #fff; padding: 3rem 2rem 2.5rem; text-align: center;
+    }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: 2.2rem; margin-bottom: .5rem; }
+    .hero p { opacity: .85; font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+    /* ── MAIN ── */
+    main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+    /* ── INPUT CARD ── */
+    .input-card {
+      background: var(--white); border-radius: 16px;
+      box-shadow: var(--shadow); padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .input-card h2 {
+      font-family: 'Syne', sans-serif; font-size: 1.15rem;
+      margin-bottom: .4rem;
+    }
+    .input-card p { font-size: .88rem; color: var(--gray-600); margin-bottom: 1.2rem; }
+
+    .symptom-input {
+      width: 100%;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: .97rem;
+      font-family: inherit;
+      color: var(--gray-800);
+      resize: vertical;
+      min-height: 110px;
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 1rem;
+    }
+    .symptom-input:focus { border-color: var(--green); }
+    .symptom-input::placeholder { color: var(--gray-400); }
+
+    /* Quick tags */
+    .quick-label { font-size: .78rem; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .5rem; }
+    .quick-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
+    .quick-tag {
+      background: var(--gray-100); border: 1.5px solid var(--gray-200);
+      border-radius: 99px; padding: .25rem .8rem; font-size: .82rem;
+      font-weight: 500; cursor: pointer; transition: background .2s, border-color .2s;
+      color: var(--gray-700);
+    }
+    .quick-tag:hover { background: var(--green-lt); border-color: #b8c8ff; color: var(--green); }
+
+    .check-btn {
+      background: var(--green); color: #fff; border: none;
+      padding: .75rem 2rem; border-radius: 10px; font-size: .97rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      font-family: inherit; display: flex; align-items: center; gap: .5rem;
+    }
+    .check-btn:hover { background: #1248d6; }
+    .check-btn:disabled { background: var(--gray-400); cursor: not-allowed; }
+
+    /* ── RESULT CARD ── */
+    #result-section { display: none; }
+    #result-section.show { display: block; }
+
+    .result-card {
+      background: var(--white); border-radius: 16px;
+      box-shadow: var(--shadow); padding: 2rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid var(--green);
+    }
+    .result-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
+    .result-icon { font-size: 2rem; flex-shrink: 0; }
+    .result-info h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; margin-bottom: .3rem; }
+    .result-info p { font-size: .9rem; color: var(--gray-600); }
+    .dept-badge {
+      display: inline-block; background: var(--blue-lt); color: var(--blue);
+      font-size: .8rem; font-weight: 700; padding: .25rem .75rem;
+      border-radius: 8px; margin-top: .5rem;
+    }
+
+    /* ── DOCTORS SECTION ── */
+    .doctors-title {
+      font-family: 'Syne', sans-serif; font-size: 1rem;
+      margin-bottom: 1rem; color: var(--gray-800);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .badge {
+      background: var(--blue-lt); color: var(--blue);
+      font-size: .78rem; font-weight: 700; padding: .2rem .6rem;
+      border-radius: 99px;
+    }
+
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .doctor-card {
+      border: 1.5px solid var(--gray-200); border-radius: 12px;
+      padding: 1.2rem; transition: border-color .2s, box-shadow .2s;
+      animation: fadeUp .3s ease both;
+    }
+    .doctor-card:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .doc-top { display: flex; align-items: center; gap: .8rem; margin-bottom: .8rem; }
+    .doc-avatar {
+      width: 46px; height: 46px; border-radius: 10px;
+      background: var(--blue-lt); display: grid; place-items: center;
+      font-family: 'Syne', sans-serif; font-size: 1.1rem;
+      color: var(--blue); font-weight: 800; flex-shrink: 0;
+    }
+    .doc-name { font-weight: 600; font-size: .97rem; margin-bottom: .1rem; }
+    .doc-dept {
+      font-size: .76rem; font-weight: 600; color: var(--blue);
+      background: var(--blue-lt); padding: .15rem .5rem;
+      border-radius: 5px; display: inline-block;
+    }
+    .doc-spec { font-size: .83rem; color: var(--gray-600); margin-bottom: .8rem; }
+    .doc-fee { font-size: .83rem; color: var(--gray-600); margin-bottom: .9rem; }
+    .doc-fee strong { color: var(--green); }
+    .book-btn {
+      width: 100%; background: var(--blue); color: #fff; border: none;
+      padding: .5rem; border-radius: 8px; font-size: .88rem;
+      font-weight: 600; cursor: pointer; transition: background .2s;
+      font-family: inherit;
+    }
+    .book-btn:hover { background: var(--blue-dk); }
+
+    /* No doctors */
+    .no-doctors {
+      background: var(--gray-100); border-radius: 10px;
+      padding: 1.5rem; text-align: center;
+      font-size: .9rem; color: var(--gray-600);
+    }
+
+    /* Warning */
+    .warning-box {
+      background: #fffbeb; border: 1.5px solid #fde68a;
+      border-radius: 10px; padding: 1rem 1.2rem;
+      font-size: .85rem; color: #92400e; margin-top: 1.2rem;
+      display: flex; gap: .6rem; align-items: flex-start;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 32px; height: 32px; border: 3px solid var(--gray-200);
+      border-top-color: var(--blue); border-radius: 50%;
+      animation: spin .7s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #status-msg { text-align: center; padding: 2rem; display: none; }
+    #status-msg.show { display: block; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="dot">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <span>DocPatientCareHub</span>
+  </a>
+  <div class="nav-links">
+  <a href="index.html">Consultation</a>
+  <a href="doctors.html">Find Doctors</a>
+  <a href="appointments.html">Appointments</a>
+  <a href="billing.html">Billing</a>
+  <a href="my-time.html">My Time</a>
+  <a href="symptom-checker.html" class="active">Symptom Checker</a>
+</div>
+  <div class="nav-actions" id="navActions">
+    <a class="btn-outline" href="login.html">Log in</a>
+    <a class="btn-primary" href="login.html">Register</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🩺 Symptom Checker</h1>
+  <p>Describe your symptoms and we'll suggest the right specialist doctor for you.</p>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- INPUT CARD -->
+  <div class="input-card">
+    <h2>What symptoms are you experiencing?</h2>
+    <p>Write in English or Bangla — e.g. "chest pain", "মাথা ব্যথা", "eye irritation"</p>
+
+    <textarea class="symptom-input" id="symptom-input"
+      placeholder="e.g. I have chest pain and shortness of breath..."></textarea>
+
+    <div class="quick-label">Quick Select</div>
+    <div class="quick-tags" id="quick-tags"></div>
+
+    <button class="check-btn" id="check-btn" onclick="checkSymptoms()">
+      🔍 Find Specialist
+    </button>
+  </div>
+
+  <!-- STATUS -->
+  <div id="status-msg"></div>
+
+  <!-- RESULT -->
+  <div id="result-section">
+    <div class="result-card">
+      <div class="result-top">
+        <div class="result-icon" id="result-icon">🏥</div>
+        <div class="result-info">
+          <h3 id="result-title">Suggested Specialist</h3>
+          <p id="result-desc"></p>
+          <span class="dept-badge" id="result-dept"></span>
+        </div>
+      </div>
+
+      <div class="doctors-title">
+        <span>Available Doctors</span>
+        <span class="badge" id="doc-count">0</span>
+      </div>
+      <div class="doctors-grid" id="doctors-grid"></div>
+
+      <div class="warning-box">
+        ⚠️ <span>This is a general suggestion only. Please consult a doctor for proper diagnosis. In case of emergency, call <strong>999</strong>.</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const BACKEND = 'backend.php';
+
+  // ── Symptom → Department mapping ──────────────────────────────────────────
+  const SYMPTOM_MAP = [
+    {
+      keywords: ['chest pain','chest','heart','palpitation','shortness of breath','breathless','বুকে ব্যথা','হৃদয়','শ্বাসকষ্ট'],
+      dept: 'Cardiology', icon: '❤️',
+      title: 'Cardiologist (Heart Specialist)',
+      desc: 'Your symptoms may be related to the heart or cardiovascular system.'
+    },
+    {
+      keywords: ['headache','migraine','dizziness','seizure','memory','stroke','numbness','মাথা ব্যথা','মাথা ঘোরা','ঘুমের সমস্যা','nervous'],
+      dept: 'Neurology', icon: '🧠',
+      title: 'Neurologist (Brain & Nerve Specialist)',
+      desc: 'Your symptoms may be related to the brain or nervous system.'
+    },
+    {
+      keywords: ['bone','joint','knee','back pain','fracture','muscle','spine','হাড়','জয়েন্ট','হাঁটু ব্যথা','কোমর ব্যথা'],
+      dept: 'Orthopedics', icon: '🦴',
+      title: 'Orthopedic Specialist',
+      desc: 'Your symptoms may be related to bones, joints or muscles.'
+    },
+    {
+      keywords: ['skin','rash','itching','acne','eczema','allergy','চুলকানি','ত্বক','ফুসকুড়ি','derma'],
+      dept: 'Dermatology', icon: '🩹',
+      title: 'Dermatologist (Skin Specialist)',
+      desc: 'Your symptoms may be related to skin conditions.'
+    },
+    {
+      keywords: ['child','baby','fever in child','শিশু','বাচ্চা','pediatric','infant','toddler'],
+      dept: 'Pediatrics', icon: '👶',
+      title: 'Pediatrician (Child Specialist)',
+      desc: 'For children\'s health concerns, a pediatrician is the right specialist.'
+    },
+    {
+      keywords: ['pregnancy','period','menstrual','gynec','মাসিক','গর্ভাবস্থা','women','ovary','uterus'],
+      dept: 'Gynecology', icon: '🌸',
+      title: 'Gynecologist (Women\'s Health Specialist)',
+      desc: 'Your symptoms may be related to women\'s reproductive health.'
+    },
+    {
+      keywords: ['ear','nose','throat','ENT','কান','নাক','গলা','tonsil','hearing','snoring','sinus'],
+      dept: 'ENT', icon: '👂',
+      title: 'ENT Specialist (Ear, Nose & Throat)',
+      desc: 'Your symptoms may be related to ear, nose or throat.'
+    },
+    {
+      keywords: ['fever','cough','cold','flu','fatigue','weakness','জ্বর','সর্দি','কাশি','general','ক্লান্তি','vomit','diarrhea','stomach','পেট ব্যথা'],
+      dept: 'General Medicine', icon: '🏥',
+      title: 'General Medicine',
+      desc: 'A general Medicean can diagnose and treat a wide range of common illnesses.'
+    }
+  ];
+
+  // Quick select tags
+  const QUICK_SYMPTOMS = [
+    'Chest pain', 'Headache', 'Fever', 'Skin rash',
+    'Joint pain', 'Ear pain', 'Stomach pain', 'Dizziness'
+  ];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('quick-tags');
+    QUICK_SYMPTOMS.forEach(sym => {
+      const tag = document.createElement('button');
+      tag.className = 'quick-tag';
+      tag.textContent = sym;
+      tag.onclick = () => {
+        document.getElementById('symptom-input').value = sym;
+        checkSymptoms();
+      };
+      container.appendChild(tag);
+    });
+  });
+
+  // ── Main function ──────────────────────────────────────────────────────────
+  async function checkSymptoms() {
+    const input = document.getElementById('symptom-input').value.trim();
+    if (!input) { alert('Please describe your symptoms first.'); return; }
+
+    const btn = document.getElementById('check-btn');
+    btn.disabled = true;
+    btn.textContent = 'Checking…';
+
+    hideResult();
+    showStatus('<div class="spinner"></div><p>Analyzing symptoms…</p>');
+
+    // Match symptom to department
+    const matched = matchSymptom(input.toLowerCase());
+
+    // Get doctors from backend
+    try {
+      const res  = await fetch(`${BACKEND}?action=get_doctors`);
+      const data = await res.json();
+
+      hideStatus();
+
+      const allDoctors = data.success ? data.data : [];
+
+      // Filter doctors by matched department
+      const filtered = allDoctors.filter(d =>
+        d.department_name.toLowerCase() === matched.dept.toLowerCase()
+      );
+
+      renderResult(matched, filtered);
+
+    } catch (e) {
+      hideStatus();
+      // Even if backend fails, show the suggestion
+      renderResult(matched, []);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔍 Find Specialist';
+    }
+  }
+
+  function matchSymptom(input) {
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const entry of SYMPTOM_MAP) {
+      let score = 0;
+      for (const kw of entry.keywords) {
+        if (input.includes(kw.toLowerCase())) score++;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = entry;
+      }
+    }
+
+    // Default to General Medicine if nothing matched
+    return bestMatch || SYMPTOM_MAP[SYMPTOM_MAP.length - 1];
+  }
+
+  function renderResult(matched, doctors) {
+    document.getElementById('result-icon').textContent  = matched.icon;
+    document.getElementById('result-title').textContent = matched.title;
+    document.getElementById('result-desc').textContent  = matched.desc;
+    document.getElementById('result-dept').textContent  = '🏥 ' + matched.dept;
+    document.getElementById('doc-count').textContent    = doctors.length + ' available';
+
+    const grid = document.getElementById('doctors-grid');
+    grid.innerHTML = '';
+
+    if (!doctors.length) {
+      grid.innerHTML = `<div class="no-doctors" style="grid-column:1/-1">
+        No doctors currently listed under <strong>${matched.dept}</strong>.
+        Please visit the <a href="doctors.html" style="color:var(--blue)">Find Doctors</a> page or contact us.
+      </div>`;
+    } else {
+      doctors.forEach((doc, i) => {
+        const card = document.createElement('div');
+        card.className = 'doctor-card';
+        card.style.animationDelay = `${i * 0.07}s`;
+        card.innerHTML = `
+          <div class="doc-top">
+            <div class="doc-avatar">${getInitials(doc.name)}</div>
+            <div>
+              <div class="doc-name">${doc.name}</div>
+              <span class="doc-dept">${doc.department_name}</span>
+            </div>
+          </div>
+          ${doc.specialization ? `<p class="doc-spec">🩺 ${doc.specialization}</p>` : ''}
+          <p class="doc-fee">Consultation fee: <strong>৳${doc.fee || 500}</strong></p>
+          <button class="book-btn" onclick="bookDoctor(${doc.doctor_id}, '${doc.name}')">Book Appointment →</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    showResult();
+    document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function bookDoctor(id, name) {
+    window.location.href = `appointments.html?doctor_id=${id}&doctor_name=${encodeURIComponent(name)}`;
+  }
+
+  function getInitials(name) {
+    return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  }
+
+  function showStatus(html) {
+    const el = document.getElementById('status-msg');
+    el.innerHTML = html; el.classList.add('show');
+  }
+  function hideStatus() { document.getElementById('status-msg').classList.remove('show'); }
+  function showResult()  { document.getElementById('result-section').classList.add('show'); }
+  function hideResult()  { document.getElementById('result-section').classList.remove('show'); }
+
+  // ── USER NAV ──
+  function updateNav() {
+    const user = JSON.parse(localStorage.getItem('dtUser') || 'null');
+    const nav  = document.getElementById('navActions');
+    if (!nav) return;
+    if (user) {
+      const initials = user.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      nav.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;background:#eff6ff;border-radius:20px;padding:5px 14px 5px 5px;cursor:pointer" onclick="window.location.href='index.html'">
+          <div style="width:30px;height:30px;background:var(--blue);border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:.78rem">${initials}</div>
+          <span style="font-size:.85rem;font-weight:600;color:var(--gray-800)">${user.name.split(' ')[0]}</span>
+        </div>
+        <button onclick="doLogout()" style="border:1.5px solid var(--gray-200);background:transparent;padding:.45rem 1.1rem;border-radius:8px;font-size:.88rem;font-weight:500;cursor:pointer;color:var(--gray-800)">Logout</button>`;
+    }
+  }
+
+  function doLogout() {
+    localStorage.removeItem('dtUser');
+    window.location.href = 'index.html';
+  }
+
+  updateNav();
+</script>
+</body>
+</html>
